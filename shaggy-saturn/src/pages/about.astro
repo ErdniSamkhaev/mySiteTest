@@ -1,5 +1,18 @@
 ---
+const pageTitle = "Обо мне";
 
+const identity = {
+  firstName: "Эрдни",
+  country: "России",
+  occupation: "Frontend Developer",
+  hobbies: ["programming", "reading", "traveling"],
+};
+
+const skills = ["HTML", "CSS", "JavaScript", "Vue.js", "Astro", "Node.js"];
+
+const happy = true;
+const finished = false;
+const goal = 3;
 ---
 
 <html lang="ru">
@@ -9,13 +22,20 @@
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>AppSec</title>
+		<title>{pageTitle}</title>
 	</head>
     <body>
     <a href="/">Главная</a>
     <a href="/about/">Обо мне</a>
     <a href="/blog/">Блог</a>
-            <h1>Обо мне</h1>
-            <p>Я фронтенд разработчик и меня зовут Эрдни.</p>
+            <h1>{pageTitle}</h1>
+            <p>Я фронтенд разработчик и меня зовут {identity.firstName}.</p>
+            <p>Я живу в {identity.country}.</p>
+            <p>Я работаю {identity.occupation}.</p>
+            <p>Мои хобби: {identity.hobbies.join(", ")}.</p>
+            <p>Мои навыки: {skills.join(", ")}.</p>
+			{happy && <p>Я счастлив</p>}
+			{finished ? <p>Я закончил</p> : <p>Я не закончил</p>}
+			{goal ? <p>Я достиг цели</p> : <p>Я не достиг цели</p>}
 	</body>
 </html>
