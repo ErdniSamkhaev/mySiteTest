@@ -1,4 +1,10 @@
 ---
+// импортируем глобальные стили
+import '../styles/global.css';
+// импортируем компоненты
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+
 const mainTitle = "Главная";
 ---
 
@@ -12,10 +18,9 @@ const mainTitle = "Главная";
 		<title>{mainTitle}</title>
 	</head>
 	<body>
-		<a href="/">Главная</a>
-		<a href="/about/">Обо мне</a>
-		<a href="/blog/">Блог</a>
+		<Navigation />
 		<h1>{mainTitle}</h1>
 		<p>Это главная страница моего сайта.</p>
+		<Footer />
 	</body>
 </html>

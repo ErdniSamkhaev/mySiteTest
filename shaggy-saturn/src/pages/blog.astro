@@ -1,4 +1,9 @@
 ---
+// импортируем глобальные стили
+import '../styles/global.css';
+// импортируем компоненты
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
 const blogTitle = "Блог";
 ---
 
@@ -12,9 +17,7 @@ const blogTitle = "Блог";
 		<title>{blogTitle}</title>
 	</head>
     <body>
-    <a href="/">Главная</a>
-    <a href="/about/">Обо мне</a>
-    <a href="/blog/">Блог</a>
+    <Navigation />
             <h1>{blogTitle}</h1>
             <p>Здесь будут мои блоги.</p>
 			<ul>
@@ -22,5 +25,6 @@ const blogTitle = "Блог";
 				<li><a href="/posts/post-2/">Post 2</a></li>
 				<li><a href="/posts/post-3/">Post 3</a></li>
 			</ul>
+	<Footer />
 	</body>
 </html>
