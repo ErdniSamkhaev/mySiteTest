@@ -1,26 +1,9 @@
 ---
-// импортируем глобальные стили
-import '../styles/global.css';
-// импортируем компоненты
-import Navigation from '../components/Navigation.astro';
-import Footer from '../components/Footer.astro';
-
-const mainTitle = "Главная";
+import BaseLayout from "../layouts/BaseLayout.astro";
+const pageTitle = "Главная";
 ---
 
-<html lang="ru">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{mainTitle}</title>
-	</head>
-	<body>
-		<Navigation />
-		<h1>{mainTitle}</h1>
-		<p>Это главная страница моего сайта.</p>
-		<Footer />
-	</body>
-</html>
+<BaseLayout pageTitle={pageTitle}>
+  <h1>{pageTitle}</h1>
+  <p>Это главная страница моего сайта.</p>
+</BaseLayout>

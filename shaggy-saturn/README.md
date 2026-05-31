@@ -41,3 +41,13 @@ All commands are run from the root of the project, from a terminal:
 ## 👀 Want to learn more?
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+```
+Astro                    v6.4.2
+Node                     v22.17.1
+System                   Windows (x64)
+Package Manager          npm
+Output                   static
+Adapter                  none
+Integrations             none
+```

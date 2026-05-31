@@ -1,15 +1,15 @@
 ---
 const { platform, telegram } = Astro.props;
-
 ---
-<a href={`https://github.com/ErdniSamkhaev?tab=repositories`}>{platform}</a>
-<a href={`https://t.me/safe_route_notes`}>{telegram}</a>
+
+<a href={`https://github.com/ErdniSamkhaev?tab=repositories`} target="_blank">{platform}</a>
+<a href={`https://t.me/safe_route_notes`} target="_blank">{telegram}</a>
 
 <style>
-    a {
-      padding: 0.5rem 1rem;
-      color: white;
-      background-color: #4c1d95;
-      text-decoration: none;
-    }
-  </style>
+  a {
+    padding: 0.5rem 1rem;
+    color: white;
+    background-color: #4c1d95;
+    text-decoration: none;
+  }
+</style>
