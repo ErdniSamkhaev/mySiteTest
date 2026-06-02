@@ -7,6 +7,7 @@ const pageTitle = "Главная";
 
 <BaseLayout pageTitle={pageTitle}>
   <h1>{pageTitle}</h1>
+  <!-- client:load - это директива для загрузки компонента на клиенте (остров сервера) -->
   <Greeting client:load messages={["Hej", "Hallo", "Hola", "Habari"]} />
   <p>Это главная страница моего сайта.</p>
 </BaseLayout>
