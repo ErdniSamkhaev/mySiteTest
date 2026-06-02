@@ -1,8 +1,10 @@
 ---
+// импортируем компонент BlogPost
+import BlogPost from '../components/BlogPost.astro';
 // импортируем базовый шаблон
-
 import BaseLayout from "../layouts/BaseLayout.astro";
-
+// инфа обо всех md файлах в папке posts
+const allPosts = Object.values(import.meta.glob('./posts/*.md', { eager: true }));
 // определяем заголовок страницы
 const pageBlogTitle = "Блог";
 ---
@@ -11,8 +13,12 @@ const pageBlogTitle = "Блог";
   <h1>{pageBlogTitle}</h1>
   <p>Здесь будут мои блоги.</p>
   <ul>
-    <li><a href="/posts/post-1/">Post 1</a></li>
-    <li><a href="/posts/post-2/">Post 2</a></li>
-    <li><a href="/posts/post-3/">Post 3</a></li>
+    {allPosts.map((post: any) => (
+      <BlogPost
+        url={post.url}
+        title={post.frontmatter.title}
+        tags={post.frontmatter.tags}
+      />
+    ))}
   </ul>
 </BaseLayout>
