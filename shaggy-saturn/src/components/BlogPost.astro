@@ -1,15 +1,22 @@
 ---
+// пропсы для компонента BlogPost
 const { title, url, tags = [] } = Astro.props;
 ---
+
+<!-- список ссылок на блоги -->
 <li>
   <a href={url}>{title}</a>
-  {tags.length > 0 && (
-    <div class="tags">
-      {tags.map((tag: string) => (
-        <p class="tag">
-          <a href={`/tags/${tag}`}>{tag}</a>
-        </p>
-      ))}
-    </div>
-  )}
+  <!-- список тегов если они есть -->
+  {
+    tags.length > 0 && (
+      <div class="tags">
+        {/* map нужен для того чтобы отобразить список тегов */}
+        {tags.map((tag: string) => (
+          <p class="tag">
+            <a href={`/tags/${tag}`}>{tag}</a>
+          </p>
+        ))}
+      </div>
+    )
+  }
 </li>

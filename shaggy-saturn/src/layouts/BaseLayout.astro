@@ -5,9 +5,10 @@ import "../styles/global.css";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 
+// пропсы для базового шаблона
 const { pageTitle } = Astro.props;
 ---
-
+<!-- Базовый шаблон сайта -->
 <html lang="ru">
   <head>
     <meta charset="utf-8" />
@@ -15,12 +16,16 @@ const { pageTitle } = Astro.props;
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+    <!-- заголовок страницы -->
     <title>{pageTitle}</title>
   </head>
   <body>
     <Header />
+    <!-- контент страницы -->
     <slot />
+    <!-- подвал сайта -->
     <Footer />
+    <!-- скрипт для меню навигации -->
     <script>
       import "../scripts/menu.js";
     </script>
