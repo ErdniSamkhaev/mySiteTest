@@ -1,44 +1,55 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
+
 const { frontmatter } = Astro.props;
+
+const formattedDate = frontmatter.pubDate
+  ? new Date(frontmatter.pubDate).toLocaleDateString("ru-RU", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    })
+  : null;
 ---
 
 <BaseLayout pageTitle={frontmatter.title}>
-  <p><em>{frontmatter.description}</em></p>
-  <p>{frontmatter.pubDate.toString().slice(0, 10)}</p>
-
-  <p>Written by: {frontmatter.author}</p>
-
-  <img src={frontmatter.image.url} width="300" alt={frontmatter.image.alt} />
-
-  <div class="tags">
+  <header class="mb-10 border-b border-border pb-8">
+    <h1>{frontmatter.title}</h1>
     {
-      frontmatter.tags.map((tag: string) => (
-        <p class="tag">
-          <a href={`/tags/${tag}`}>{tag}</a>
-        </p>
-      ))
+      frontmatter.description && (
+        <p class="text-primary mt-3 text-lg">{frontmatter.description}</p>
+      )
     }
-  </div>
+    <div class="text-text mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+      {formattedDate && <time datetime={frontmatter.pubDate.toISOString()}>{formattedDate}</time>}
+      {frontmatter.author && <span>{frontmatter.author}</span>}
+    </div>
+    {
+      frontmatter.image && (
+        <img
+          class="mt-6 w-full max-w-xl rounded-lg"
+          src={frontmatter.image.url}
+          width="600"
+          alt={frontmatter.image.alt}
+        />
+      )
+    }
+    {
+      frontmatter.tags?.length > 0 && (
+        <div class="tags mt-6">
+          {
+            frontmatter.tags.map((tag: string) => (
+              <span class="tag">
+                <a href={`/tags/${tag}`}>{tag}</a>
+              </span>
+            ))
+          }
+        </div>
+      )
+    }
+  </header>
 
-  <slot />
+  <article class="content">
+    <slot />
+  </article>
 </BaseLayout>
-<style>
-  a {
-    color: #00539f;
-  }
-
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .tag {
-    margin: 0.25em;
-    border: dotted 1px #a1a1a1;
-    border-radius: 0.5em;
-    padding: 0.5em 1em;
-    font-size: 1.15em;
-    background-color: #f8fcfd;
-  }
-</style>

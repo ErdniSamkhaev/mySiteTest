@@ -1,22 +1,53 @@
 ---
-// пропсы для компонента BlogPost
-const { title, url, tags = [] } = Astro.props;
+const { title, url, description, pubDate, tags = [] } = Astro.props;
+
+const formattedDate = pubDate
+  ? new Date(pubDate).toLocaleDateString("ru-RU", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    })
+  : null;
 ---
 
-<!-- список ссылок на блоги -->
-<li>
-  <a href={url}>{title}</a>
-  <!-- список тегов если они есть -->
+<article class="h-full rounded-lg border border-border p-6 transition hover:border-primary lg:p-8">
+  {
+    formattedDate && (
+      <time class="text-sm text-text" datetime={new Date(pubDate).toISOString()}>
+        {formattedDate}
+      </time>
+    )
+  }
+  <h2 class="h3 mt-3 mb-2 font-normal">
+    <a href={url} class="text-text-dark no-underline hover:text-primary">
+      {title}
+    </a>
+  </h2>
+  {description && <p class="text-text mb-4">{description}</p>}
   {
     tags.length > 0 && (
       <div class="tags">
-        {/* map нужен для того чтобы отобразить список тегов */}
         {tags.map((tag: string) => (
-          <p class="tag">
+          <span class="tag">
             <a href={`/tags/${tag}`}>{tag}</a>
-          </p>
+          </span>
         ))}
       </div>
     )
   }
-</li>
+  <a href={url} class="btn-link mt-4 inline-flex items-center text-text-dark">
+    Читать далее
+    <svg
+      class="ml-2"
+      width="16"
+      height="8"
+      viewBox="0 0 16 8"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        d="M15.3536 4.35355c.1952-.19526.1952-.51184 0-.7071L12.1716.464467C11.9763.269205 11.6597.269205 11.4645.464467c-.1953.195262-.1953.511845 0 .707103L14.2929 4 11.4645 6.82843c-.1953.19526-.1953.51184 0 .7071C11.6597 7.7308 11.9763 7.7308 12.1716 7.53553l3.182-3.18198zM0 4.5H15v-1H0v1z"
+      ></path>
+    </svg>
+  </a>
+</article>

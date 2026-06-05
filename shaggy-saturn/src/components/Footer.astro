@@ -1,16 +1,12 @@
 ---
-import Social from './Social.astro';
+import Social from "./Social.astro";
 ---
 
-<style>
-    footer {
-      display: flex;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-</style>
-
-<!-- компонент Social для отображения ссылок на социальные сети -->
-<footer>
-    <Social platform="github" telegram="telegram"/>
+<footer class="border-t border-border pt-12 pb-10">
+  <div class="container text-center">
+    <Social />
+    <p class="text-text mt-6 text-sm">
+      © {new Date().getFullYear()} Erdni Samkhaev
+    </p>
+  </div>
 </footer>

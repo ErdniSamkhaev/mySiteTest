@@ -1,25 +1,76 @@
 ---
-// импортируем компоненты Navigation и Menu
-import Navigation from "./Navigation.astro";
-import Menu from "./Menu.astro";
 import ThemeIcon from "./ThemeIcon.astro";
+
+const { pathname } = Astro.url;
+
+const navLinks = [
+  { name: "Главная", url: "/" },
+  { name: "Обо мне", url: "/about/" },
+  { name: "Блог", url: "/blog/" },
+  { name: "Теги", url: "/tags/" },
+];
+
+function isActive(url: string) {
+  if (url === "/") {
+    return pathname === "/" || pathname === "";
+  }
+  return pathname.startsWith(url.replace(/\/$/, ""));
+}
 ---
 
-<!-- шапка сайта -->
-<header>
-  <!-- меню навигации -->
-  <nav>
-    <div>
+<header class="border-b border-border pb-4 pt-6 md:pt-10">
+  <nav class="navbar container flex flex-wrap items-center gap-3">
+    <input id="nav-toggle" type="checkbox" class="hidden" aria-hidden="true" />
+
+    <div class="order-1 flex items-center gap-3 md:mr-auto">
       <ThemeIcon />
-      <Menu />
+      <a href="/" class="navbar-brand no-underline">Erdni</a>
     </div>
-    <Navigation />
+
+    <label
+      for="nav-toggle"
+      class="btn btn-primary order-2 ml-auto inline-flex cursor-pointer items-center md:hidden"
+    >
+      <svg
+        id="show-button"
+        class="mr-2 block h-4 w-4 fill-current"
+        viewBox="0 0 20 20"
+        aria-hidden="true"
+      >
+        <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0V0z"></path>
+      </svg>
+      <svg
+        id="hide-button"
+        class="mr-2 hidden h-4 w-4 fill-current"
+        viewBox="0 0 20 20"
+        aria-hidden="true"
+      >
+        <polygon
+          points="11 9 22 9 22 11 11 11 11 22 9 22 9 11 -2 11 -2 9 9 9 9 -2 11 -2"
+          transform="rotate(45 10 10)"></polygon>
+      </svg>
+      Меню
+    </label>
+
+    <ul
+      id="nav-menu"
+      class="navbar-nav order-3 hidden w-full md:order-2 md:ml-auto md:flex md:w-auto md:flex-row md:items-center md:justify-end md:gap-1"
+    >
+      {
+        navLinks.map((link) => (
+          <li class="nav-item">
+            <a
+              href={link.url}
+              class:list={[
+                "nav-link inline-block",
+                isActive(link.url) && "nav-link-active",
+              ]}
+            >
+              {link.name}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
   </nav>
 </header>
-
-<style>
-  div {
-    display: flex;
-    justify-content: space-between;
-  }
-</style>

@@ -1,48 +1,26 @@
 ---
+import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-const allPosts = Object.values(
-  import.meta.glob("../posts/*.md", { eager: true }),
-);
-const tags = [
-  "astro",
-  "blogging",
-  "learning in public",
-  "successes",
-  "setbacks",
-  "community",
-];
 
-const pageTitle = "Tag Index";
+const allPosts = await getCollection("posts");
+const tags = [...new Set(allPosts.flatMap((post) => post.data.tags))].sort();
+
+const pageTitle = "Теги";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
+  <header class="mb-10">
+    <h1>{pageTitle}</h1>
+    <p class="text-text mt-3">Все темы блога в одном месте.</p>
+  </header>
+
   <div class="tags">
     {
       tags.map((tag) => (
-        <p class="tag">
+        <span class="tag">
           <a href={`/tags/${tag}`}>{tag}</a>
-        </p>
+        </span>
       ))
     }
   </div>
 </BaseLayout>
-
-<style>
-    a {
-      color: #00539F;
-    }
-  
-    .tags {
-      display: flex;
-      flex-wrap: wrap;
-    }
-  
-    .tag {
-      margin: 0.25em;
-      border: dotted 1px #a1a1a1;
-      border-radius: .5em;
-      padding: .5em 1em;
-      font-size: 1.15em;
-      background-color: #F8FCFD;
-    }
-  </style>

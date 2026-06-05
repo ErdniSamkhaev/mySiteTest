@@ -1,5 +1,4 @@
 ---
-
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const pageTitle = "Обо мне";
@@ -12,43 +11,20 @@ const identity = {
 };
 
 const skills = ["HTML", "CSS", "JavaScript", "Vue.js", "Astro", "Node.js"];
-
-const happy = true;
-const finished = true;
-const goal = 3;
-// css переменные
-const skillColor = "crimson";
-const fontWeight = "bold";
-const textCase = "uppercase";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-    <!-- define:vars - это директива для определения переменных в css -->
-    <style define:vars={{ skillColor, fontWeight, textCase }}>
-      h1 {
-        color: purple;
-        font-size: 4rem;
-      }
-      /* используем css переменную skillColor */
-      .skill {
-        color: var(--skillColor);
-        font-weight: var(--fontWeight);
-        text-transform: var(--textCase);
-      }
-    </style>
-
+  <article class="content mx-auto max-w-3xl">
     <h1>{pageTitle}</h1>
-    <p>Я фронтенд разработчик и меня зовут {identity.firstName}.</p>
-    <p>Я живу в {identity.country}.</p>
-    <p>Я работаю {identity.occupation}.</p>
-    <p>Мои хобби: {identity.hobbies.join(", ")}.</p>
-    <p>Мои навыки: {skills.join(", ")}.</p>
-    <ul>
-      {skills.map((skill) => <li class="skill">{skill}</li>)}
-    </ul>
-    {happy && <p>Я счастлив</p>}
-    {finished ? <p>Я закончил</p> : <p>Я не закончил</p>}
-    {goal ? <p>Я достиг цели</p> : <p>Я не достиг цели</p>}
+    <p>Я фронтенд-разработчик, меня зовут {identity.firstName}.</p>
+    <p>Живу в {identity.country}, работаю {identity.occupation}.</p>
+    <p>Хобби: {identity.hobbies.join(", ")}.</p>
 
-
+    <h2 class="mt-10">Навыки</h2>
+    <div class="tags mt-4">
+      {skills.map((skill) => (
+        <span class="tag">{skill}</span>
+      ))}
+    </div>
+  </article>
 </BaseLayout>

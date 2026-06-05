@@ -1,17 +1,27 @@
 ---
-// пропсы для компонента Social
-const { platform, telegram } = Astro.props;
+const links = [
+  {
+    label: "GitHub",
+    href: "https://github.com/ErdniSamkhaev?tab=repositories",
+  },
+  {
+    label: "Telegram",
+    href: "https://t.me/safe_route_notes",
+  },
+];
 ---
 
-<!-- ссылки на социальные сети -->
-<a href={`https://github.com/ErdniSamkhaev?tab=repositories`} target="_blank">{platform}</a>
-<a href={`https://t.me/safe_route_notes`} target="_blank">{telegram}</a>
-
-<style>
-  a {
-    padding: 0.5rem 1rem;
-    color: white;
-    background-color: #4c1d95;
-    text-decoration: none;
+<div class="flex flex-wrap justify-center gap-3">
+  {
+    links.map((link) => (
+      <a
+        href={link.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn btn-primary no-underline"
+      >
+        {link.label}
+      </a>
+    ))
   }
-</style>
+</div>

@@ -2,10 +2,16 @@
 
 ---
 
-<button id="themeToggle" aria-label="Toggle theme">
+<button
+  id="themeToggle"
+  type="button"
+  class="inline-flex h-10 w-10 items-center justify-center rounded text-text-dark transition hover:bg-white/10"
+  aria-label="Переключить тему"
+>
   <svg
     aria-hidden="true"
-    width="30px"
+    width="22"
+    height="22"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
   >
@@ -26,10 +32,13 @@
   #themeToggle {
     border: 0;
     background: none;
+    padding: 0;
   }
+
   .sun {
-    fill: black;
+    fill: currentColor;
   }
+
   .moon {
     fill: transparent;
   }
@@ -37,8 +46,9 @@
   :global(.dark) .sun {
     fill: transparent;
   }
+
   :global(.dark) .moon {
-    fill: white;
+    fill: currentColor;
   }
 </style>
 

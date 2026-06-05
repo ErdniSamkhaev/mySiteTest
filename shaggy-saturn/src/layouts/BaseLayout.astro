@@ -1,33 +1,36 @@
 ---
-// импортируем глобальные стили
-import "../styles/global.css";
-// импортируем компоненты
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
+import theme from "../config/theme.json";
+import "../styles/main.css";
+import { Font } from "astro:assets";
 
-// пропсы для базового шаблона
 const { pageTitle } = Astro.props;
+
+const fontEntries = Object.entries(theme.fonts.font_family).filter(
+  ([key]) => !key.includes("_type"),
+);
 ---
-<!-- Базовый шаблон сайта -->
 <html lang="ru">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <!-- заголовок страницы -->
+    {
+      fontEntries.map(([key]) => {
+        const cssVar = `--font-${key}`;
+        return <Font cssVariable={cssVar} preload />;
+      })
+    }
     <title>{pageTitle}</title>
   </head>
   <body>
     <Header />
-    <!-- контент страницы -->
-    <slot />
-    <!-- подвал сайта -->
+    <main id="main-content" class="container section-sm">
+      <slot />
+    </main>
     <Footer />
-    <!-- скрипт для меню навигации -->
-    <script>
-      import "../scripts/menu.js";
-    </script>
   </body>
 </html>
