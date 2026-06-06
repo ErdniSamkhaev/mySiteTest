@@ -1,28 +1,48 @@
 ---
 layout: ../../layouts/MarkdownPostLayout.astro
-title: 'My First Blog Post'
-pubDate: 2026-05-30
-description: 'This is the first post of my new Astro blog.'
+title: 'Этот пост для теста'
+pubDate: 2026-06-06
+description: 'Реализовано с помощью Astro'
 author: 'Erdni Samkhaev'
 image:
-    url: 'https://docs.astro.build/assets/rose.webp'
-    alt: 'The Astro logo on a dark background with a pink glow.'
-tags: ["astro", "blogging", "learning in public"]
+    url: '/images/posts/test.webp'
+    alt: 'Курамяка'
+    variant: round
+tags: ["test", "blogging", "learning in public"]
 ---
 
 
-Published on: 2026-05-30
+Published on: 2026-06-06
 
-Welcome to my _new blog_ about learning Astro! Here, I will share my learning journey as I build a new website.
+Тестовый пост для проверки сайта с телефона.
 
-## What I've accomplished
+## Типографика
 
-1. **Installing Astro**: First, I created a new Astro project and set up my online accounts.
+Обычный текст, **жирный**, _курсив_ и [ссылка на Astro](https://astro.build).
 
-2. **Making Pages**: I then learned how to make pages by creating new `.astro` files and placing them in the `src/pages/` folder.
+## Списки
 
-3. **Making Blog Posts**: This is my first blog post! I now have Astro pages and Markdown posts!
+1. Первый пункт
+2. Второй с `inline code`
 
-## What's next
+- маркированный
+- ещё один
 
-I will finish the Astro tutorial, and then keep adding more posts. Watch this space for more to come.
+## Код
+
+```
+npm run dev
+npm run build
+```
+
+## Цитата
+
+> Если цитата читается нормально — стили prose работают.
+
+## Картинка в тексте
+
+![Курамяка в тексте](/images/posts/test.webp)
+
+---
+
+**Чеклист:** меню · тема · назад · теги · футер · скролл.

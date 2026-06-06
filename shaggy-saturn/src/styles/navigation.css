@@ -24,3 +24,7 @@
 .nav-link-active {
   @apply bg-white/10 text-text-dark;
 }
+
+.nav-toggle {
+  @apply h-10 w-10 rounded border-0 bg-transparent p-0 text-text-dark transition hover:opacity-80;
+}

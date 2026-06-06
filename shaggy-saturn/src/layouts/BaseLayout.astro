@@ -21,14 +21,24 @@ const fontEntries = Object.entries(theme.fonts.font_family).filter(
     {
       fontEntries.map(([key]) => {
         const cssVar = `--font-${key}`;
-        return <Font cssVariable={cssVar} preload />;
+        return <Font cssVariable={cssVar as "--font-primary"} preload />;
       })
     }
     <title>{pageTitle}</title>
+    <script is:inline>
+      const theme = (() => {
+        const stored = localStorage?.getItem("theme") ?? "";
+        if (["dark", "light"].includes(stored)) return stored;
+        return window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
+      })();
+      document.documentElement.classList.toggle("dark", theme === "dark");
+    </script>
   </head>
-  <body>
+  <body class="flex min-h-dvh flex-col">
     <Header />
-    <main id="main-content" class="container section-sm">
+    <main id="main-content" class="container section-sm flex-1">
       <slot />
     </main>
     <Footer />

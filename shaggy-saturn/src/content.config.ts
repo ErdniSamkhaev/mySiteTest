@@ -22,6 +22,7 @@ const posts = defineCollection({
       .object({
         url: z.string(),
         alt: z.string(),
+        variant: z.enum(["default", "round"]).default("default"),
       })
       .optional(),
     tags: z.array(z.string()).default([]),

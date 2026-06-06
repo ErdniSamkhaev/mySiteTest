@@ -1,8 +1,8 @@
 /* navbar toggler */
-input#nav-toggle:checked + label #show-button {
+input#nav-toggle:checked ~ label[for="nav-toggle"] #show-button {
   @apply hidden;
 }
-input#nav-toggle:checked + label #hide-button {
+input#nav-toggle:checked ~ label[for="nav-toggle"] #hide-button {
   @apply block;
 }
 input#nav-toggle:checked ~ #nav-menu {

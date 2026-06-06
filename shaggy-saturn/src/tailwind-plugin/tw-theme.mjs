@@ -20,13 +20,13 @@ const darkColorGroups = [];
 if (themeConfig.colors.darkmode?.theme_color) {
   darkColorGroups.push({
     colors: themeConfig.colors.darkmode.theme_color,
-    prefix: "darkmode-",
+    prefix: "",
   });
 }
 if (themeConfig.colors.darkmode?.text_color) {
   darkColorGroups.push({
     colors: themeConfig.colors.darkmode.text_color,
-    prefix: "darkmode-",
+    prefix: "",
   });
 }
 
@@ -72,7 +72,7 @@ Object.entries(fontFamilies).forEach(([key, font]) => {
 const baseVars = { ...fontVars, ...defaultVars };
 
 const colorsMap = {};
-[...defaultColorGroups, ...darkColorGroups].forEach(({ colors, prefix }) => {
+defaultColorGroups.forEach(({ colors, prefix }) => {
   Object.entries(colors).forEach(([key]) => {
     const cssKey = key.replace(/_/g, "-");
     colorsMap[prefix + cssKey] = `var(--color-${prefix}${cssKey})`;

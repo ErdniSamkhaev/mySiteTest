@@ -13,16 +13,18 @@
 
 /* social icons */
 .social-icons {
-  @apply space-x-6;
+  @apply m-0 list-none p-0;
   li {
     @apply inline-block;
     a {
-      @apply flex text-2xl text-text-dark items-center justify-center text-center leading-9;
+      @apply inline-flex h-10 w-10 items-center justify-center rounded text-text-dark no-underline transition duration-200 ease-in-out hover:opacity-80;
       svg {
-        @apply transition
-        duration-200 ease-in-out hover:scale-125;
+        @apply block;
       }
     }
+  }
+  li + li {
+    @apply ml-4;
   }
 }
 
@@ -132,7 +134,11 @@
   @apply prose-p:text-text;
   @apply prose-img:rounded-lg;
   @apply prose-blockquote:rounded prose-blockquote:border-primary prose-blockquote:bg-[rgba(97,238,188,4%)] prose-blockquote:py-8 prose-blockquote:px-8 prose-blockquote:text-2xl prose-blockquote:not-italic prose-blockquote:leading-9 prose-blockquote:text-text-dark;
-  @apply prose-code:inline-block prose-code:rounded-sm prose-code:px-4 prose-code:pb-4;
+  @apply prose-code:text-primary prose-code:bg-[#242e38];
+  @apply prose-code:rounded prose-code:px-1.5 prose-code:py-0.5;
+  @apply prose-code:before:content-none prose-code:after:content-none;
+  @apply prose-pre:bg-[#242e38] prose-pre:text-text prose-pre:border prose-pre:border-border;
+  @apply prose-pre:rounded-lg prose-pre:p-4 prose-pre:overflow-x-auto;
   @apply prose-strong:text-text;
   @apply prose-a:text-primary;
   @apply prose-li:text-text prose-li:marker:text-text;
@@ -142,18 +148,23 @@
     @apply my-0 text-[21px] leading-9 text-text-dark;
   }
 
+  pre code {
+    @apply bg-transparent p-0 text-text;
+  }
+
   tbody {
     @apply bg-[#242e38];
   }
+  
 }
 
 /* shaggy-saturn: tags until BlogPost is migrated to Hydrogen markup */
 .tags {
-  @apply flex flex-wrap gap-2 my-2;
+  @apply m-0 flex list-none flex-wrap gap-2 p-0;
 }
 
 .tag {
-  @apply inline-block rounded border border-border px-3 py-1 text-sm bg-[#242e38];
+  @apply inline-block rounded border border-border bg-[#2e3b47] px-3 py-1 text-sm text-text-dark;
 }
 
 .tag a {
@@ -164,3 +175,4 @@
 .tag:focus-within {
   @apply border-primary;
 }
+

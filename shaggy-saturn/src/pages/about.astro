@@ -6,8 +6,11 @@ const pageTitle = "Обо мне";
 const identity = {
   firstName: "Эрдни",
   country: "России",
-  occupation: "Frontend Developer",
-  hobbies: ["programming", "reading", "traveling"],
+  city: "Москве",
+  occupation: "Фронтенд-разработчиком",
+  hobbies: ["анжумания", "поутрам бегат", "кушац лублу"],
+  bio: "Веду блог и делюсь заметками.",
+  github: "https://github.com/ErdniSamkhaev?tab=repositories",
 };
 
 const skills = ["HTML", "CSS", "JavaScript", "Vue.js", "Astro", "Node.js"];
@@ -15,16 +18,33 @@ const skills = ["HTML", "CSS", "JavaScript", "Vue.js", "Astro", "Node.js"];
 
 <BaseLayout pageTitle={pageTitle}>
   <article class="content mx-auto max-w-3xl">
-    <h1>{pageTitle}</h1>
-    <p>Я фронтенд-разработчик, меня зовут {identity.firstName}.</p>
-    <p>Живу в {identity.country}, работаю {identity.occupation}.</p>
-    <p>Хобби: {identity.hobbies.join(", ")}.</p>
+    <div class="flex flex-col items-center gap-8 sm:flex-row sm:items-start">
+      <img
+        src="/images/me2.webp"
+        width={192}
+        height={192}
+        alt={`Фото ${identity.firstName}`}
+        class="size-48 shrink-0 rounded-full object-cover"
+      />
 
-    <h2 class="mt-10">Навыки</h2>
-    <div class="tags mt-4">
-      {skills.map((skill) => (
-        <span class="tag">{skill}</span>
-      ))}
+      <section aria-labelledby="about-heading" class="min-w-0 text-center sm:text-left">
+        <h1 id="about-heading">{pageTitle}</h1>
+        <p>Меня зовут {identity.firstName}.</p>
+        <p>Живу в {identity.city}, работаю {identity.occupation}.</p>
+        <p>Хобби: {identity.hobbies.join(", ")}.</p>
+        <p>{identity.bio}</p>
+      </section>
     </div>
+
+    <section aria-labelledby="skills-heading" class="mt-10">
+      <h2 id="skills-heading">Навыки</h2>
+      <div class="not-prose">
+        <ul class="tags mt-4" role="list">
+          {skills.map((skill) => (
+            <li class="tag">{skill}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
   </article>
 </BaseLayout>
