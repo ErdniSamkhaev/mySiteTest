@@ -1,11 +1,28 @@
 ---
-import Social from "./Social.astro";
+const links = [
+  { label: "Telegram", href: "https://t.me/safe_route_notes", external: true },
+  { label: "GitHub", href: "https://github.com/ErdniSamkhaev", external: true },
+  { label: "RSS", href: "/rss.xml", external: false },
+];
 ---
 
-<footer class="mt-auto border-t border-border py-8">
-  <div class="container text-center">
-    <Social />
-    <p class="text-text mt-4 text-sm">
+<footer class="mt-auto border-t border-border">
+  <div class="container flex flex-wrap items-center justify-between gap-3 py-7">
+    <nav class="flex gap-5" aria-label="Ссылки в подвале">
+      {
+        links.map((link) => (
+          <a
+            href={link.href}
+            class="whitespace-nowrap text-sm text-text no-underline transition hover:text-primary"
+            target={link.external ? "_blank" : undefined}
+            rel={link.external ? "noopener noreferrer" : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+    <p class="m-0 whitespace-nowrap text-sm text-meta">
       © {new Date().getFullYear()} Erdni Samkhaev
     </p>
   </div>

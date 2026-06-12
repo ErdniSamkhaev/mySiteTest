@@ -4,8 +4,9 @@ import Header from "../components/Header.astro";
 import theme from "../config/theme.json";
 import "../styles/main.css";
 import { Font } from "astro:assets";
+import { ClientRouter } from "astro:transitions";
 
-const { pageTitle } = Astro.props;
+const { pageTitle, fullWidth = false } = Astro.props;
 
 const fontEntries = Object.entries(theme.fonts.font_family).filter(
   ([key]) => !key.includes("_type"),
@@ -25,20 +26,38 @@ const fontEntries = Object.entries(theme.fonts.font_family).filter(
       })
     }
     <title>{pageTitle}</title>
+    <ClientRouter />
     <script is:inline>
-      const theme = (() => {
-        const stored = localStorage?.getItem("theme") ?? "";
-        if (["dark", "light"].includes(stored)) return stored;
-        return window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light";
+      (() => {
+        if (window.__themeInit) return;
+        window.__themeInit = true;
+        const applyTheme = () => {
+          let stored = "";
+          try {
+            stored = localStorage.getItem("theme") ?? "";
+          } catch {
+            /* localStorage недоступен — берём системную тему */
+          }
+          const theme = ["dark", "light"].includes(stored)
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+          document.documentElement.classList.toggle("dark", theme === "dark");
+          document.documentElement.classList.add("js");
+        };
+        applyTheme();
+        // ClientRouter заменяет атрибуты <html> при навигации — возвращаем тему
+        document.addEventListener("astro:after-swap", applyTheme);
       })();
-      document.documentElement.classList.toggle("dark", theme === "dark");
     </script>
   </head>
   <body class="flex min-h-dvh flex-col">
     <Header />
-    <main id="main-content" class="container section-sm flex-1">
+    <main
+      id="main-content"
+      class:list={["flex-1", !fullWidth && "container section-sm"]}
+    >
       <slot />
     </main>
     <Footer />

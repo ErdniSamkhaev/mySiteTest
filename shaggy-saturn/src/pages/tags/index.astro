@@ -1,8 +1,9 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { slugifyTag } from "../../scripts/slugify";
 
-const allPosts = await getCollection("posts");
+const allPosts = await getCollection("posts", ({ data }) => !data.draft);
 const tags = [...new Set(allPosts.flatMap((post) => post.data.tags))].sort();
 
 const pageTitle = "Теги";
@@ -17,9 +18,9 @@ const pageTitle = "Теги";
   <div class="tags">
     {
       tags.map((tag) => (
-        <span class="tag">
-          <a href={`/tags/${tag}`}>{tag}</a>
-        </span>
+        <a class="tag no-underline" href={`/tags/${slugifyTag(tag)}/`}>
+          {tag}
+        </a>
       ))
     }
   </div>

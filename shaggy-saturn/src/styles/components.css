@@ -8,7 +8,7 @@
 
 /* container */
 .container {
-  @apply mx-auto max-w-[1320px]! px-4;
+  @apply mx-auto max-w-[1100px]! px-5 md:px-8;
 }
 
 /* social icons */
@@ -98,7 +98,7 @@
   @apply mb-6 overflow-hidden rounded-lg border border-border;
 }
 .accordion-header {
-  @apply flex w-full cursor-pointer items-center justify-between px-8 py-4 text-lg bg-[#2e3b47] text-text-dark;
+  @apply flex w-full cursor-pointer items-center justify-between px-8 py-4 text-lg bg-surface text-text-dark;
 }
 .accordion-icon {
   @apply ml-auto h-[.8em] w-[.8em] rotate-[-90deg] transition-transform duration-200;
@@ -123,7 +123,7 @@
 /* content style */
 .content {
   @apply prose max-w-none;
-  @apply prose-headings:mt-4 prose-headings:font-normal prose-headings:text-text-dark;
+  @apply prose-headings:mt-4 prose-headings:font-medium prose-headings:text-text-dark;
   @apply prose-h1:mb-4 prose-h1:text-h1-sm md:prose-h1:text-h1;
   @apply prose-h2:mb-4 prose-h2:text-h2-sm md:prose-h2:text-h2;
   @apply prose-h3:mt-4 prose-h3:text-h3-sm md:prose-h3:text-h3;
@@ -134,15 +134,15 @@
   @apply prose-p:text-text;
   @apply prose-img:rounded-lg;
   @apply prose-blockquote:rounded prose-blockquote:border-primary prose-blockquote:bg-[rgba(97,238,188,4%)] prose-blockquote:py-8 prose-blockquote:px-8 prose-blockquote:text-2xl prose-blockquote:not-italic prose-blockquote:leading-9 prose-blockquote:text-text-dark;
-  @apply prose-code:text-primary prose-code:bg-[#242e38];
+  @apply prose-code:text-primary prose-code:bg-code-bg;
   @apply prose-code:rounded prose-code:px-1.5 prose-code:py-0.5;
   @apply prose-code:before:content-none prose-code:after:content-none;
-  @apply prose-pre:bg-[#242e38] prose-pre:text-text prose-pre:border prose-pre:border-border;
+  @apply prose-pre:bg-code-bg prose-pre:text-text prose-pre:border prose-pre:border-border;
   @apply prose-pre:rounded-lg prose-pre:p-4 prose-pre:overflow-x-auto;
   @apply prose-strong:text-text;
   @apply prose-a:text-primary;
   @apply prose-li:text-text prose-li:marker:text-text;
-  @apply prose-table:overflow-hidden prose-table:rounded prose-thead:border-border prose-thead:bg-[#2e3b47] prose-tr:border-none prose-th:p-3 prose-th:text-base prose-th:text-text-dark prose-td:p-3 prose-td:text-base prose-td:text-text;
+  @apply prose-table:overflow-hidden prose-table:rounded prose-thead:border-border prose-thead:bg-surface prose-tr:border-none prose-th:p-3 prose-th:text-base prose-th:text-text-dark prose-td:p-3 prose-td:text-base prose-td:text-text;
 
   blockquote p {
     @apply my-0 text-[21px] leading-9 text-text-dark;
@@ -153,18 +153,19 @@
   }
 
   tbody {
-    @apply bg-[#242e38];
+    @apply bg-code-bg;
   }
-  
+
 }
 
-/* shaggy-saturn: tags until BlogPost is migrated to Hydrogen markup */
+/* tags: чипы из хэндоффа «Эволюция 3D» */
 .tags {
-  @apply m-0 flex list-none flex-wrap gap-2 p-0;
+  @apply m-0 flex list-none flex-wrap gap-1.5 p-0;
 }
 
 .tag {
-  @apply inline-block rounded border border-border bg-[#2e3b47] px-3 py-1 text-sm text-text-dark;
+  @apply inline-block rounded px-2.5 py-1 text-xs text-primary;
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
 }
 
 .tag a {
@@ -173,6 +174,80 @@
 
 .tag:hover,
 .tag:focus-within {
-  @apply border-primary;
+  background: color-mix(in srgb, var(--color-primary) 18%, transparent);
+}
+
+/* карточка поста v2 */
+.post-card:focus-within {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.post-cover-placeholder {
+  background: repeating-linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--color-surface) 70%, var(--color-border)),
+    color-mix(in srgb, var(--color-surface) 70%, var(--color-border)) 10px,
+    var(--color-surface) 10px,
+    var(--color-surface) 20px
+  );
+}
+
+/* карточка подписки на главной */
+.subscribe-card:hover,
+.subscribe-card:focus-visible {
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 4%, transparent);
+}
+
+/* hero: виньетка поверх блоба — гасит края, держит читаемость текста.
+   В светлой теме блоб тёмный, поэтому добавляем молочный слой и по центру */
+.hero-vignette {
+  background: radial-gradient(
+    ellipse 62% 58% at 50% 44%,
+    color-mix(in srgb, var(--color-body) 45%, transparent) 30%,
+    color-mix(in srgb, var(--color-body) 88%, transparent) 72%,
+    var(--color-body) 98%
+  );
+}
+.dark .hero-vignette {
+  background: radial-gradient(
+    ellipse 62% 58% at 50% 44%,
+    rgba(23, 33, 43, 0) 30%,
+    rgba(23, 33, 43, 0.82) 72%,
+    #17212b 98%
+  );
+}
+
+/* hero: тени текста поверх блоба — только в тёмной теме */
+.hero-shadow-strong,
+.hero-shadow-soft {
+  text-shadow: none;
+}
+.dark .hero-shadow-strong {
+  text-shadow: 0 2px 24px rgba(10, 16, 22, 0.55);
+}
+.dark .hero-shadow-soft {
+  text-shadow: 0 1px 14px rgba(10, 16, 22, 0.5);
+}
+
+/* scroll-reveal карточек (включается только при работающем JS) */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.4s ease-out,
+    transform 0.4s ease-out;
+}
+.js .reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 

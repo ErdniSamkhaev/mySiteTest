@@ -5,13 +5,13 @@
 <button
   id="themeToggle"
   type="button"
-  class="inline-flex h-10 w-10 items-center justify-center rounded text-text-dark transition hover:opacity-80"
+  class="inline-flex h-[34px] w-[34px] items-center justify-center rounded-full border border-border text-text transition hover:border-primary hover:text-primary"
   aria-label="Переключить тему"
 >
   <svg
     aria-hidden="true"
-    width="22"
-    height="22"
+    width="18"
+    height="18"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
   >
@@ -29,12 +29,6 @@
 </button>
 
 <style>
-  #themeToggle {
-    border: 0;
-    background: none;
-    padding: 0;
-  }
-
   .sun {
     fill: currentColor;
   }
@@ -53,12 +47,22 @@
 </style>
 
 <script is:inline>
-  document.getElementById("themeToggle")?.addEventListener("click", () => {
-    const root = document.documentElement;
-    root.classList.toggle("dark");
-    localStorage.setItem(
-      "theme",
-      root.classList.contains("dark") ? "dark" : "light",
-    );
-  });
+  // Делегирование на document: переживает свапы ClientRouter, вешается один раз
+  if (!window.__themeToggleBound) {
+    window.__themeToggleBound = true;
+    document.addEventListener("click", (event) => {
+      if (!(event.target instanceof Element)) return;
+      if (!event.target.closest("#themeToggle")) return;
+      const root = document.documentElement;
+      root.classList.toggle("dark");
+      try {
+        localStorage.setItem(
+          "theme",
+          root.classList.contains("dark") ? "dark" : "light",
+        );
+      } catch {
+        /* localStorage недоступен — тема живёт до перезагрузки */
+      }
+    });
+  }
 </script>

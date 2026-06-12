@@ -1,15 +1,167 @@
 ---
+import { getCollection } from "astro:content";
+import BlogPost from "../components/BlogPost.astro";
+import HeroBlob from "../components/HeroBlob.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { readingTime } from "../scripts/readingTime";
 
 const pageTitle = "Главная";
+
+const latestPosts = (await getCollection("posts", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 2);
+
+const links = {
+  telegram: "https://t.me/safe_route_notes",
+  github: "https://github.com/ErdniSamkhaev",
+};
 ---
 
-<BaseLayout pageTitle={pageTitle}>
-  <section class="mx-auto max-w-2xl py-8 text-center md:py-16">
-    <h1 class="text-text-dark">Erdni Samkhaev</h1>
-    <p class="text-primary mt-4 text-xl">Frontend Developer</p>
-    <p class="text-text mt-6 leading-relaxed">
-      Личный сайт и блог о разработке, обучении и проектах.
-    </p>
+<BaseLayout pageTitle={pageTitle} fullWidth>
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <HeroBlob />
+    <div class="hero-vignette pointer-events-none absolute inset-0" aria-hidden="true"></div>
+
+    <div class="container relative z-[2] pb-20 pt-24 text-center">
+      <div
+        class="mx-auto size-[124px] rounded-full p-[3px]"
+        style="background: linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 12%, transparent));"
+      >
+        <img
+          src="/images/me2.webp"
+          alt="Фото Эрдни"
+          width="118"
+          height="118"
+          class="block size-full rounded-full border-[3px] border-body object-cover"
+          style="object-position: 50% 28%;"
+        />
+      </div>
+
+      <h1 class="hero-shadow-strong mt-[30px] tracking-[-0.01em]">
+        Эрдни Самхаев
+      </h1>
+
+      <div
+        class="mt-4 inline-flex items-center gap-2 rounded-full border px-4 py-[7px] backdrop-blur-[4px]"
+        style="background: color-mix(in srgb, var(--color-body) 55%, transparent); border-color: color-mix(in srgb, var(--color-primary) 40%, transparent);"
+      >
+        <span class="size-[7px] rounded-full bg-primary" aria-hidden="true"></span>
+        <span class="whitespace-nowrap text-sm font-semibold tracking-[0.04em] text-primary">
+          Frontend Developer
+        </span>
+      </div>
+
+      <p class="hero-shadow-soft mx-auto mt-[22px] max-w-[540px] text-[17px] leading-[1.65] text-text">
+        Пишу про разработку, обучение и свои проекты. Живу в Москве, веду блог
+        и делюсь заметками.
+      </p>
+
+      <div class="mt-[34px] flex flex-wrap justify-center gap-3">
+        <a
+          href={links.telegram}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg bg-primary px-[26px] py-[13px] text-[15px] font-bold text-on-primary no-underline transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(102,225,151,0.35)]"
+        >
+          Telegram ↗
+        </a>
+        <a
+          href={links.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-border px-[26px] py-[13px] text-[15px] font-semibold text-text-dark no-underline backdrop-blur-[4px] transition duration-200 hover:border-primary hover:text-primary"
+          style="background: color-mix(in srgb, var(--color-body) 50%, transparent);"
+        >
+          GitHub ↗
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ПОСЛЕДНИЕ ПОСТЫ -->
+  <section class="relative z-[2]">
+    <div class="container pb-18 pt-4">
+      <div class="mb-[22px] flex items-baseline justify-between">
+        <h2 class="m-0 font-secondary text-[22px] font-semibold text-text-dark">
+          Последние посты
+        </h2>
+        <a
+          href="/blog/"
+          class="whitespace-nowrap text-sm text-primary no-underline hover:underline"
+        >
+          Все посты →
+        </a>
+      </div>
+
+      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {
+          latestPosts.map((post) => (
+            <BlogPost
+              url={`/posts/${post.id}/`}
+              title={post.data.title}
+              description={post.data.description}
+              pubDate={post.data.pubDate}
+              minutes={readingTime(post.body ?? "")}
+              tags={post.data.tags}
+              image={post.data.image}
+            />
+          ))
+        }
+
+        <a
+          href={links.telegram}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="subscribe-card reveal flex flex-col items-center justify-center gap-3.5 rounded-xl border border-dashed border-border p-8 text-center no-underline transition duration-200"
+          data-reveal
+        >
+          <span
+            class="flex size-11 items-center justify-center rounded-full text-lg text-primary"
+            style="background: color-mix(in srgb, var(--color-primary) 12%, transparent);"
+            aria-hidden="true"
+          >
+            →
+          </span>
+          <span class="font-semibold text-text-dark">
+            Посты выходят в Telegram первыми
+          </span>
+          <span class="text-sm text-primary">Подписаться на канал</span>
+        </a>
+      </div>
+    </div>
   </section>
 </BaseLayout>
+
+<script>
+  function reveal() {
+    const cards = document.querySelectorAll<HTMLElement>("[data-reveal]");
+    if (!cards.length) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      cards.forEach((card) => card.classList.add("is-revealed"));
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-revealed");
+            io.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.15 },
+    );
+
+    cards.forEach((card, i) => {
+      card.style.transitionDelay = `${i * 80}ms`;
+      io.observe(card);
+    });
+  }
+
+  document.addEventListener("astro:page-load", reveal);
+  // astro:page-load мог отстрелить до выполнения модуля
+  reveal();
+</script>

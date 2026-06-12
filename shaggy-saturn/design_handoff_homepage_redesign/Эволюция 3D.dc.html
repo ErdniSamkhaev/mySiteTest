@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; background: #17212b; }
+    * { box-sizing: border-box; }
+  </style>
+</helmet>
+
+<div style="min-height: 100vh; background: #17212b; font-family: Onest, sans-serif; display: flex; flex-direction: column;">
+
+  <!-- HEADER -->
+  <header style="border-bottom: 1px solid #2f4050; position: relative; z-index: 3;">
+    <div style="max-width: 1100px; margin: 0 auto; padding: 22px 32px; display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="width: 10px; height: 10px; border-radius: 50%; background: #66e197;"></span>
+        <span style="font-family: Unbounded, sans-serif; font-weight: 600; font-size: 16px; color: #ffffff;">Erdni</span>
+      </div>
+      <nav style="display: flex; align-items: center; gap: 6px;">
+        <span style="font-size: 14px; color: #66e197; background: rgba(102,225,151,0.10); border-radius: 8px; padding: 8px 14px; white-space: nowrap; cursor: pointer;">Главная</span>
+        <span style="font-size: 14px; color: #c6d0d9; padding: 8px 14px; border-radius: 8px; white-space: nowrap; cursor: pointer;" style-hover="background: rgba(255,255,255,0.06)">Обо мне</span>
+        <span style="font-size: 14px; color: #c6d0d9; padding: 8px 14px; border-radius: 8px; white-space: nowrap; cursor: pointer;" style-hover="background: rgba(255,255,255,0.06)">Блог</span>
+        <span style="font-size: 14px; color: #c6d0d9; padding: 8px 14px; border-radius: 8px; white-space: nowrap; cursor: pointer;" style-hover="background: rgba(255,255,255,0.06)">Теги</span>
+        <span style="width: 34px; height: 34px; border-radius: 50%; border: 1px solid #2f4050; display: inline-flex; align-items: center; justify-content: center; color: #c6d0d9; font-size: 14px; margin-left: 8px; cursor: pointer;" style-hover="border-color: #66e197; color: #66e197">☾</span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO с 3D-блобом -->
+  <section style="position: relative; overflow: hidden;">
+    <div ref="{{ blobMount }}" style="position: absolute; inset: -40px; pointer-events: none; filter: blur(10px) saturate(1.05);"></div>
+    <div style="position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 62% 58% at 50% 44%, rgba(23,33,43,0) 30%, rgba(23,33,43,0.82) 72%, #17212b 98%);"></div>
+
+    <div style="position: relative; z-index: 2; max-width: 1100px; margin: 0 auto; padding: 96px 32px 80px; text-align: center;">
+      <div style="width: 124px; height: 124px; border-radius: 50%; margin: 0 auto; padding: 3px; background: linear-gradient(135deg, #66e197, rgba(102,225,151,0.12));">
+        <img src="assets/me2.webp" alt="Эрдни" style="width: 118px; height: 118px; border-radius: 50%; object-fit: cover; object-position: 50% 28%; display: block; border: 3px solid #17212b;">
+      </div>
+      <h1 style="font-family: Unbounded, sans-serif; font-size: 46px; font-weight: 700; color: #ffffff; margin: 30px 0 0; letter-spacing: -0.01em; text-shadow: 0 2px 24px rgba(10,16,22,0.55);">Эрдни Самхаев</h1>
+      <div style="display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; background: rgba(23,33,43,0.55); border: 1px solid rgba(102,225,151,0.4); border-radius: 99px; padding: 7px 16px; backdrop-filter: blur(4px);">
+        <span style="width: 7px; height: 7px; border-radius: 50%; background: #66e197;"></span>
+        <span style="font-size: 14px; font-weight: 600; color: #66e197; letter-spacing: 0.04em; white-space: nowrap;">Frontend Developer</span>
+      </div>
+      <p style="font-size: 17px; line-height: 1.65; color: #d4dde4; max-width: 540px; margin: 22px auto 0; text-shadow: 0 1px 14px rgba(10,16,22,0.5);">Пишу про разработку, обучение и свои проекты. Живу в Москве, веду блог и делюсь заметками.</p>
+      <div style="display: flex; justify-content: center; gap: 12px; margin-top: 34px;">
+        <span style="display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; background: #66e197; color: #10301e; font-weight: 700; font-size: 15px; border-radius: 12px; padding: 13px 26px; cursor: pointer; transition: transform .2s, box-shadow .2s;" style-hover="transform: translateY(-2px); box-shadow: 0 8px 28px rgba(102,225,151,0.35)">Telegram ↗</span>
+        <span style="display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; border: 1px solid #3a4f63; background: rgba(23,33,43,0.5); color: #ffffff; font-weight: 600; font-size: 15px; border-radius: 12px; padding: 13px 26px; cursor: pointer; backdrop-filter: blur(4px); transition: all .2s;" style-hover="border-color: #66e197; color: #66e197">GitHub ↗</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ПОСЛЕДНИЕ ПОСТЫ -->
+  <section style="position: relative; z-index: 2; flex: 1;">
+    <div style="max-width: 1100px; margin: 0 auto; padding: 16px 32px 72px;">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 22px;">
+        <h2 style="font-family: Unbounded, sans-serif; font-size: 22px; font-weight: 600; color: #ffffff; margin: 0;">Последние посты</h2>
+        <span style="font-size: 14px; color: #66e197; white-space: nowrap; cursor: pointer;">Все посты →</span>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+        <div style="background: #1f2c3a; border: 1px solid #2f4050; border-radius: 16px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s, border-color .2s;" style-hover="transform: translateY(-5px); box-shadow: 0 16px 36px rgba(0,0,0,0.35); border-color: #66e197">
+          <div style="aspect-ratio: 16/9; background: repeating-linear-gradient(45deg, #243140, #243140 10px, #1f2c3a 10px, #1f2c3a 20px); display: flex; align-items: center; justify-content: center;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #6d7d8c;">обложка из frontmatter</span>
+          </div>
+          <div style="padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1;">
+            <div style="display: flex; gap: 8px; font-size: 13px; color: #8fa0af; white-space: nowrap;"><span>9 июня 2026</span><span>·</span><span>3 мин</span></div>
+            <div style="font-family: Unbounded, sans-serif; font-size: 17px; font-weight: 500; line-height: 1.35; color: #ffffff;">Государственный экзамен</div>
+            <p style="font-size: 14px; line-height: 1.55; color: #c6d0d9; margin: 0; flex: 1;">Про то как сдавал</p>
+            <div style="display: flex; gap: 6px;">
+              <span style="font-size: 12px; color: #66e197; background: rgba(102,225,151,0.10); border-radius: 6px; padding: 4px 10px;">blogging</span>
+              <span style="font-size: 12px; color: #66e197; background: rgba(102,225,151,0.10); border-radius: 6px; padding: 4px 10px;">экзамен</span>
+            </div>
+          </div>
+        </div>
+        <div style="background: #1f2c3a; border: 1px solid #2f4050; border-radius: 16px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s, border-color .2s;" style-hover="transform: translateY(-5px); box-shadow: 0 16px 36px rgba(0,0,0,0.35); border-color: #66e197">
+          <div style="aspect-ratio: 16/9; overflow: hidden;">
+            <img src="assets/post-test.webp" alt="Курамяка" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block;">
+          </div>
+          <div style="padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 10px; flex: 1;">
+            <div style="display: flex; gap: 8px; font-size: 13px; color: #8fa0af; white-space: nowrap;"><span>6 июня 2026</span><span>·</span><span>2 мин</span></div>
+            <div style="font-family: Unbounded, sans-serif; font-size: 17px; font-weight: 500; line-height: 1.35; color: #ffffff;">Этот пост для теста</div>
+            <p style="font-size: 14px; line-height: 1.55; color: #c6d0d9; margin: 0; flex: 1;">Реализовано с помощью Astro</p>
+            <div style="display: flex; gap: 6px;">
+              <span style="font-size: 12px; color: #66e197; background: rgba(102,225,151,0.10); border-radius: 6px; padding: 4px 10px;">test</span>
+              <span style="font-size: 12px; color: #66e197; background: rgba(102,225,151,0.10); border-radius: 6px; padding: 4px 10px;">blogging</span>
+            </div>
+          </div>
+        </div>
+        <div style="border: 1px dashed #2f4050; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 32px; text-align: center; cursor: pointer; transition: all .2s;" style-hover="border-color: #66e197; background: rgba(102,225,151,0.04)">
+          <span style="width: 44px; height: 44px; border-radius: 50%; background: rgba(102,225,151,0.12); display: inline-flex; align-items: center; justify-content: center; color: #66e197; font-size: 18px;">→</span>
+          <div style="font-weight: 600; font-size: 16px; color: #ffffff;">Посты выходят в Telegram первыми</div>
+          <span style="font-size: 14px; color: #66e197; white-space: nowrap;">Подписаться на канал</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="border-top: 1px solid #2f4050; position: relative; z-index: 2;">
+    <div style="max-width: 1100px; margin: 0 auto; padding: 28px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+      <div style="display: flex; gap: 20px;">
+        <span style="font-size: 14px; color: #c6d0d9; white-space: nowrap; cursor: pointer;" style-hover="color: #66e197">Telegram</span>
+        <span style="font-size: 14px; color: #c6d0d9; white-space: nowrap; cursor: pointer;" style-hover="color: #66e197">GitHub</span>
+        <span style="font-size: 14px; color: #c6d0d9; white-space: nowrap; cursor: pointer;" style-hover="color: #66e197">RSS</span>
+      </div>
+      <span style="font-size: 14px; color: #8fa0af; white-space: nowrap;">© 2026 Erdni Samkhaev</span>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;blobBlur&quot;: { &quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 10, &quot;min&quot;: 0, &quot;max&quot;: 40, &quot;tsType&quot;: &quot;number&quot; },
+  &quot;blobSpeed&quot;: { &quot;editor&quot;: &quot;float&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 3, &quot;step&quot;: 0.1, &quot;tsType&quot;: &quot;number&quot; },
+  &quot;blobStrength&quot;: { &quot;editor&quot;: &quot;float&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 2, &quot;step&quot;: 0.1, &quot;tsType&quot;: &quot;number&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      blobMount: (el) => { this._mount = el; },
+    };
+  }
+
+  componentDidMount() {
+    this._disposed = false;
+    this._mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+    this._onMove = (e) => {
+      this._mouse.tx = (e.clientX / window.innerWidth) * 2 - 1;
+      this._mouse.ty = (e.clientY / window.innerHeight) * 2 - 1;
+    };
+    window.addEventListener('mousemove', this._onMove);
+    this._reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const tryInit = () => {
+      if (this._disposed) return;
+      if (window.THREE && this._mount && this._mount.clientWidth > 0) {
+        try { this._init(); } catch (e) { console.warn('3D init failed, fallback to flat bg', e); }
+      } else {
+        this._initTimer = setTimeout(tryInit, 120);
+      }
+    };
+    tryInit();
+  }
+
+  _init() {
+    const THREE = window.THREE;
+    const mount = this._mount;
+    const w = mount.clientWidth, h = mount.clientHeight;
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    renderer.setSize(w, h);
+    renderer.setClearColor(0x000000, 0);
+    renderer.domElement.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;';
+    mount.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 20);
+    camera.position.z = 4.2;
+
+    const noiseGLSL = `
+      vec3 mod289(vec3 x){return x - floor(x * (1.0/289.0)) * 289.0;}
+      vec4 mod289(vec4 x){return x - floor(x * (1.0/289.0)) * 289.0;}
+      vec4 permute(vec4 x){return mod289(((x*34.0)+1.0)*x);}
+      vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
+      float snoise(vec3 v){
+        const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+        const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+        vec3 i = floor(v + dot(v, C.yyy));
+        vec3 x0 = v - i + dot(i, C.xxx);
+        vec3 g = step(x0.yzx, x0.xyz);
+        vec3 l = 1.0 - g;
+        vec3 i1 = min(g.xyz, l.zxy);
+        vec3 i2 = max(g.xyz, l.zxy);
+        vec3 x1 = x0 - i1 + C.xxx;
+        vec3 x2 = x0 - i2 + C.yyy;
+        vec3 x3 = x0 - D.yyy;
+        i = mod289(i);
+        vec4 p = permute(permute(permute(i.z + vec4(0.0, i1.z, i2.z, 1.0)) + i.y + vec4(0.0, i1.y, i2.y, 1.0)) + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+        float n_ = 0.142857142857;
+        vec3 ns = n_ * D.wyz - D.xzx;
+        vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+        vec4 x_ = floor(j * ns.z);
+        vec4 y_ = floor(j - 7.0 * x_);
+        vec4 x = x_ * ns.x + ns.yyyy;
+        vec4 y = y_ * ns.x + ns.yyyy;
+        vec4 hh = 1.0 - abs(x) - abs(y);
+        vec4 b0 = vec4(x.xy, y.xy);
+        vec4 b1 = vec4(x.zw, y.zw);
+        vec4 s0 = floor(b0) * 2.0 + 1.0;
+        vec4 s1 = floor(b1) * 2.0 + 1.0;
+        vec4 sh = -step(hh, vec4(0.0));
+        vec4 a0 = b0.xzyw + s0.xzyw * sh.xxyy;
+        vec4 a1 = b1.xzyw + s1.xzyw * sh.zzww;
+        vec3 p0 = vec3(a0.xy, hh.x);
+        vec3 p1 = vec3(a0.zw, hh.y);
+        vec3 p2 = vec3(a1.xy, hh.z);
+        vec3 p3 = vec3(a1.zw, hh.w);
+        vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
+        p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+        vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+        m = m * m;
+        return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+      }`;
+
+    const uniforms = {
+      uTime: { value: 0 },
+      uMouse: { value: new THREE.Vector2(0, 0) },
+      uStrength: { value: 1 },
+    };
+
+    const material = new THREE.ShaderMaterial({
+      uniforms,
+      transparent: true,
+      vertexShader: noiseGLSL + `
+        uniform float uTime;
+        uniform vec2 uMouse;
+        uniform float uStrength;
+        varying float vNoise;
+        varying vec3 vNormal;
+        varying vec3 vView;
+        void main() {
+          vec3 dir = normalize(position);
+          float n = snoise(dir * 1.6 + vec3(uTime * 0.18));
+          vec3 mdir = normalize(vec3(uMouse.x, -uMouse.y, 0.8));
+          float md = max(dot(dir, mdir), 0.0);
+          float bulge = pow(md, 3.0) * length(uMouse) * 0.45;
+          float disp = (n * 0.32 + bulge) * uStrength;
+          vec3 p = position + normal * disp;
+          vNoise = n;
+          vNormal = normalMatrix * normal;
+          vec4 mv = modelViewMatrix * vec4(p, 1.0);
+          vView = -mv.xyz;
+          gl_Position = projectionMatrix * mv;
+        }`,
+      fragmentShader: `
+        precision highp float;
+        varying float vNoise;
+        varying vec3 vNormal;
+        varying vec3 vView;
+        void main() {
+          vec3 N = normalize(vNormal);
+          vec3 V = normalize(vView);
+          float fres = pow(1.0 - max(dot(N, V), 0.0), 2.2);
+          vec3 deep = vec3(0.030, 0.150, 0.100);
+          vec3 base = vec3(0.400, 0.882, 0.592);
+          vec3 glow = vec3(0.780, 1.000, 0.880);
+          vec3 col = mix(deep, base, smoothstep(-0.5, 0.9, vNoise));
+          col += glow * fres * 0.55;
+          float d = max(dot(N, normalize(vec3(0.4, 0.7, 0.6))), 0.0);
+          col *= 0.55 + 0.6 * d;
+          gl_FragColor = vec4(col, 0.92);
+        }`,
+    });
+
+    const mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.5, 48), material);
+    mesh.position.y = 0.25;
+    scene.add(mesh);
+
+    this._three = { renderer, scene, camera, mesh, uniforms };
+
+    this._ro = new ResizeObserver(() => {
+      const W = mount.clientWidth, H = mount.clientHeight;
+      if (!W || !H) return;
+      renderer.setSize(W, H);
+      camera.aspect = W / H;
+      camera.updateProjectionMatrix();
+    });
+    this._ro.observe(mount);
+
+    const start = performance.now();
+    const loop = (now) => {
+      if (this._disposed) return;
+      const speed = this.props.blobSpeed ?? 1;
+      const strength = this.props.blobStrength ?? 1;
+      const blur = this.props.blobBlur ?? 10;
+      if (this._lastBlur !== blur) {
+        this._lastBlur = blur;
+        mount.style.filter = 'blur(' + blur + 'px) saturate(1.05)';
+      }
+      const t = ((now - start) / 1000) * speed;
+      const m = this._mouse;
+      m.x += (m.tx - m.x) * 0.045;
+      m.y += (m.ty - m.y) * 0.045;
+      uniforms.uTime.value = t;
+      uniforms.uStrength.value = strength;
+      uniforms.uMouse.value.set(m.x * 0.9, m.y * 0.9);
+      mesh.rotation.y = t * 0.1 + m.x * 0.35;
+      mesh.rotation.x = m.y * 0.22;
+      mesh.position.y = 0.25 + Math.sin(t * 0.5) * 0.06;
+      renderer.render(scene, camera);
+      if (!this._reduced) this._raf = requestAnimationFrame(loop);
+    };
+    this._raf = requestAnimationFrame(loop);
+  }
+
+  componentWillUnmount() {
+    this._disposed = true;
+    if (this._initTimer) clearTimeout(this._initTimer);
+    if (this._raf) cancelAnimationFrame(this._raf);
+    if (this._onMove) window.removeEventListener('mousemove', this._onMove);
+    if (this._ro) this._ro.disconnect();
+    if (this._three) {
+      this._three.mesh.geometry.dispose();
+      this._three.mesh.material.dispose();
+      this._three.renderer.dispose();
+      if (this._three.renderer.domElement.parentNode) {
+        this._three.renderer.domElement.parentNode.removeChild(this._three.renderer.domElement);
+      }
+    }
+  }
+}
+</script>
+</body>
+</html>

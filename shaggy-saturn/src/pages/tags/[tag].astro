@@ -1,28 +1,46 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
-import BaseLayout from "../../layouts/BaseLayout.astro";
 import BlogPost from "../../components/BlogPost.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { readingTime } from "../../scripts/readingTime";
+import { slugifyTag } from "../../scripts/slugify";
 
 export async function getStaticPaths() {
-  const allPosts = await getCollection("posts");
-  const uniqueTags = [
-    ...new Set(allPosts.flatMap((post) => post.data.tags)),
-  ];
+  const allPosts = await getCollection("posts", ({ data }) => !data.draft);
 
-  return uniqueTags.map((tag) => ({
-    params: { tag },
+  // слаг → оригинальный тег; дубликаты слагов (например, разный регистр) схлопываются
+  const bySlug = new Map<string, string>();
+  for (const tag of allPosts.flatMap((post) => post.data.tags)) {
+    const slug = slugifyTag(tag);
+    if (!bySlug.has(slug)) bySlug.set(slug, tag);
+  }
+
+  return [...bySlug.entries()].map(([slug, tag]) => ({
+    params: { tag: slug },
     props: {
-      posts: allPosts.filter((post) => post.data.tags.includes(tag)),
+      tag,
+      posts: allPosts.filter((post) =>
+        post.data.tags.some((t) => slugifyTag(t) === slug),
+      ),
     },
   }));
 }
 
 interface Props {
+  tag: string;
   posts: CollectionEntry<"posts">[];
 }
 
-const { tag } = Astro.params;
-const { posts } = Astro.props as Props;
+const { tag, posts } = Astro.props as Props;
+
+function pluralizePosts(count: number) {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 === 1 && mod100 !== 11) return "публикация";
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14))
+    return "публикации";
+  return "публикаций";
+}
 ---
 
 <BaseLayout pageTitle={`Тег: ${tag}`}>
@@ -30,7 +48,7 @@ const { posts } = Astro.props as Props;
     <h1>Тег: {tag}</h1>
     <p class="text-text mt-3">
       {posts.length}{" "}
-      {posts.length === 1 ? "публикация" : "публикаций"}
+      {pluralizePosts(posts.length)}
     </p>
   </header>
 
@@ -38,12 +56,14 @@ const { posts } = Astro.props as Props;
     {
       posts.map((post) => (
         <BlogPost
-            url={`/posts/${post.id}`}
-            title={post.data.title}
-            description={post.data.description}
-            pubDate={post.data.pubDate}
-            tags={post.data.tags}
-          />
+          url={`/posts/${post.id}/`}
+          title={post.data.title}
+          description={post.data.description}
+          pubDate={post.data.pubDate}
+          minutes={readingTime(post.body ?? "")}
+          tags={post.data.tags}
+          image={post.data.image}
+        />
       ))
     }
   </div>

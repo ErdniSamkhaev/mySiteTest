@@ -20,16 +20,21 @@ function isActive(url: string) {
 
 <header class="border-b border-border pb-4 pt-6 md:pt-10">
   <nav class="navbar container flex flex-wrap items-center gap-3">
-    <input id="nav-toggle" type="checkbox" class="hidden" aria-hidden="true" />
+    {/* Бургер без JS: checkbox-хак (правила в safe.css).
+        sr-only вместо hidden — чекбокс остаётся фокусируемым с клавиатуры */}
+    <input id="nav-toggle" type="checkbox" class="peer sr-only" />
 
     <div class="order-1 flex items-center gap-3 md:mr-auto">
       <ThemeIcon />
-      <a href="/" class="navbar-brand no-underline">Erdni</a>
+      <a href="/" class="navbar-brand no-underline">
+        <span class="size-2.5 rounded-full bg-primary" aria-hidden="true"></span>
+        Erdni
+      </a>
     </div>
 
     <label
       for="nav-toggle"
-      class="nav-toggle order-2 ml-auto inline-flex cursor-pointer items-center justify-center md:hidden"
+      class="nav-toggle order-2 ml-auto inline-flex cursor-pointer items-center justify-center peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 md:hidden"
       aria-label="Открыть меню"
     >
       <svg

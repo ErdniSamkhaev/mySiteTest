@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
+import { slugifyTag } from "../scripts/slugify";
 
 const { frontmatter } = Astro.props;
 
@@ -70,9 +71,9 @@ const imageClasses =
         frontmatter.tags?.length > 0 && (
           <div class="tags mt-6">
             {frontmatter.tags.map((tag: string) => (
-              <span class="tag">
-                <a href={`/tags/${tag}`}>{tag}</a>
-              </span>
+              <a class="tag no-underline" href={`/tags/${slugifyTag(tag)}/`}>
+                {tag}
+              </a>
             ))}
           </div>
         )
