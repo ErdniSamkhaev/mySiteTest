@@ -9,7 +9,7 @@
 - **Astro 6** (static output), посты — Content Collections (`src/content/posts/`)
 - **Tailwind CSS 4** + кастомные плагины (`src/tailwind-plugin/`)
 - **three.js** — WebGL-блоб в hero главной (только там и грузится)
-- **Preact** — пока только учебный компонент `Greeting.jsx` (не используется, кандидат на удаление вместе с интеграцией)
+- **@astrojs/sitemap** — генерация `sitemap-index.xml` при сборке
 
 ## Команды
 
@@ -30,10 +30,9 @@ src/
 │   ├── Header.astro        # лого с точкой, навигация, бургер (CSS checkbox)
 │   ├── Footer.astro        # текстовые ссылки Telegram · GitHub · RSS
 │   ├── ThemeIcon.astro     # переключатель темы (34px круг)
-│   ├── Social.astro        # иконки соцсетей (сейчас не используется — заменён футером)
-│   └── Greeting.jsx        # учебный Preact-компонент (не используется)
+│   └── Social.astro        # иконки соцсетей (сейчас не используется — заменён футером)
 ├── layouts/
-│   ├── BaseLayout.astro    # <head>, шрифты, тема, ClientRouter; проп fullWidth для главной
+│   ├── BaseLayout.astro    # <head>: SEO/OG/canonical, шрифты, тема, ClientRouter; пропы description/image/ogType/fullWidth
 │   └── MarkdownPostLayout.astro
 ├── pages/                  # index, blog, about, posts/[...slug], tags/, rss.xml.js
 ├── content/posts/          # markdown-посты
@@ -84,11 +83,18 @@ Unbounded (заголовки, `--font-secondary`) + Onest (текст, `--font-
 - чистятся на `astro:before-swap` (см. `HeroBlob.astro` — dispose геометрии/рендерера);
 - обработчики кликов вешаются делегированием на `document` один раз (см. `ThemeIcon.astro`).
 
+## SEO
+
+- Мета-теги, Open Graph, Twitter-карточки, canonical — в `BaseLayout.astro`; страницы передают
+  `description`/`image` пропами (по умолчанию — общий текст и `/images/me2.webp`).
+- `sitemap-index.xml` — интеграция `@astrojs/sitemap`, ссылка в `robots.txt`.
+- Абсолютные URL берутся из `Astro.site` (`https://just-erdni.com` в `astro.config.mjs`).
+- Страница 404 — `src/pages/404.astro`.
+
 ## Известный техдолг
 
-- Нет meta description / OG-карточек / canonical / sitemap / robots.txt / 404 — важно для SEO
-  и превью в Telegram (см. [`../AUDIT.md`](../AUDIT.md)).
-- `Greeting.jsx` + интеграция Preact и `public/images/me.webp` (525 KB) не используются.
 - Прогресс-бар чтения на странице поста — запланирован, вне макета «Эволюция 3D».
+- `Social.astro` и `src/styles/global.css` (обёртка) больше не используются — кандидаты на удаление.
+- В постах (.md) остался `layout:` во frontmatter — игнорируется content collections.
 
 План работ и фазы: [`plan/`](./plan/), аудит ошибок: [`../AUDIT.md`](../AUDIT.md).

@@ -6,7 +6,20 @@ import "../styles/main.css";
 import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
 
-const { pageTitle, fullWidth = false } = Astro.props;
+const {
+  pageTitle,
+  description = "Личный сайт и блог Эрдни Самхаева — про разработку, обучение и свои проекты.",
+  image = "/images/me2.webp",
+  ogType = "website",
+  fullWidth = false,
+} = Astro.props;
+
+const siteName = "Эрдни Самхаев";
+const title = pageTitle ? `${pageTitle} · ${siteName}` : siteName;
+
+// Astro.site задан в astro.config (https://just-erdni.com) — абсолютные URL для SEO/OG
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
 
 const fontEntries = Object.entries(theme.fonts.font_family).filter(
   ([key]) => !key.includes("_type"),
@@ -19,13 +32,37 @@ const fontEntries = Object.entries(theme.fonts.font_family).filter(
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={siteName}
+      href="/rss.xml"
+    />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="ru_RU" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
     {
       fontEntries.map(([key]) => {
         const cssVar = `--font-${key}`;
         return <Font cssVariable={cssVar as "--font-primary"} preload />;
       })
     }
-    <title>{pageTitle}</title>
     <ClientRouter />
     <script is:inline>
       (() => {

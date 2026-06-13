@@ -10,7 +10,10 @@ const allPosts = (await getCollection("posts", ({ data }) => !data.draft)).sort(
 const pageBlogTitle = "Блог";
 ---
 
-<BaseLayout pageTitle={pageBlogTitle}>
+<BaseLayout
+  pageTitle={pageBlogTitle}
+  description="Заметки о разработке и обучении."
+>
   <header class="mb-10">
     <h1>{pageBlogTitle}</h1>
     <p class="text-text mt-3">Заметки о разработке и обучении.</p>

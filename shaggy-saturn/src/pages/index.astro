@@ -17,13 +17,17 @@ const links = {
 };
 ---
 
-<BaseLayout pageTitle={pageTitle} fullWidth>
+<BaseLayout
+  pageTitle={pageTitle}
+  description="Пишу про разработку, обучение и свои проекты. Живу в Москве, веду блог и делюсь заметками."
+  fullWidth
+>
   <!-- HERO -->
   <section class="relative overflow-hidden">
     <HeroBlob />
     <div class="hero-vignette pointer-events-none absolute inset-0" aria-hidden="true"></div>
 
-    <div class="container relative z-[2] pb-20 pt-24 text-center">
+    <div class="container relative z-[2] pb-14 pt-16 text-center md:pb-20 md:pt-24">
       <div
         class="mx-auto size-[124px] rounded-full p-[3px]"
         style="background: linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 12%, transparent));"

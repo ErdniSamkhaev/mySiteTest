@@ -126,9 +126,17 @@
       return; // нет WebGL — остаётся плоский фон
     }
 
+    // Тач-устройства/узкие экраны: меньше деталей и pixelRatio ради FPS.
+    // Блоб размыт на 10px, поэтому потеря детализации не видна.
+    const lowPower =
+      window.matchMedia("(pointer: coarse)").matches ||
+      window.innerWidth < 768;
+
     const w = mount.clientWidth || 1;
     const h = mount.clientHeight || 1;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio || 1, lowPower ? 1 : 1.5),
+    );
     renderer.setSize(w, h);
     renderer.setClearColor(0x000000, 0);
     renderer.domElement.style.cssText =
@@ -152,17 +160,18 @@
       fragmentShader: FRAGMENT_SHADER,
     });
 
-    const geometry = new IcosahedronGeometry(1.5, 48);
+    const geometry = new IcosahedronGeometry(1.5, lowPower ? 24 : 48);
     const mesh = new Mesh(geometry, material);
     mesh.position.y = 0.25;
     scene.add(mesh);
 
     const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
-    const onMove = (e: MouseEvent) => {
+    const onMove = (e: PointerEvent) => {
       mouse.tx = (e.clientX / window.innerWidth) * 2 - 1;
       mouse.ty = (e.clientY / window.innerHeight) * 2 - 1;
     };
-    window.addEventListener("mousemove", onMove);
+    // pointermove покрывает мышь, тач и стилус — на телефоне блоб тоже реагирует
+    window.addEventListener("pointermove", onMove, { passive: true });
 
     const ro = new ResizeObserver(() => {
       const W = mount.clientWidth;
@@ -202,7 +211,7 @@
 
     cleanup = () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("pointermove", onMove);
       ro.disconnect();
       geometry.dispose();
       material.dispose();

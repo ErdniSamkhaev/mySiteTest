@@ -1,0 +1,29 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const pageTitle = "Страница не найдена";
+---
+
+<BaseLayout pageTitle={pageTitle} description="Такой страницы нет.">
+  <section class="mx-auto max-w-xl py-16 text-center md:py-24">
+    <p class="font-secondary text-h1 font-bold text-primary">404</p>
+    <h1 class="mt-4">Страница не найдена</h1>
+    <p class="text-text mt-4">
+      Похоже, такой страницы нет или её перенесли.
+    </p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a
+        href="/"
+        class="inline-flex items-center rounded-lg bg-primary px-[26px] py-[13px] text-[15px] font-bold text-on-primary no-underline transition hover:-translate-y-0.5"
+      >
+        На главную
+      </a>
+      <a
+        href="/blog/"
+        class="inline-flex items-center rounded-lg border border-border px-[26px] py-[13px] text-[15px] font-semibold text-text-dark no-underline transition hover:border-primary hover:text-primary"
+      >
+        В блог
+      </a>
+    </div>
+  </section>
+</BaseLayout>

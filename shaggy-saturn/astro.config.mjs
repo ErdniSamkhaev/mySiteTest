@@ -1,5 +1,5 @@
 // @ts-check
-import preact from "@astrojs/preact";
+import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, fontProviders, sharpImageService } from "astro/config";
 import theme from "./src/config/theme.json";
@@ -43,7 +43,7 @@ export default defineConfig({
   vite: { plugins: [tailwindcss()] },
   image: { service: sharpImageService() },
   fonts: fontsConfig,
-  integrations: [preact()],
+  integrations: [sitemap()],
   markdown: {
     shikiConfig: {
       theme: "one-dark-pro",

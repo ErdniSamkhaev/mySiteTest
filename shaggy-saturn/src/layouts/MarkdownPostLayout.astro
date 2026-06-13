@@ -18,7 +18,12 @@ const imageClasses =
     : "mt-6 w-full max-w-xl rounded-lg";
 ---
 
-<BaseLayout pageTitle={frontmatter.title}>
+<BaseLayout
+  pageTitle={frontmatter.title}
+  description={frontmatter.description}
+  image={frontmatter.image?.url}
+  ogType="article"
+>
   <div class="mx-auto max-w-2xl">
     <a
       href="/blog/"

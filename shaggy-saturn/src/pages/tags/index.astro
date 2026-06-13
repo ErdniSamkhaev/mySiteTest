@@ -9,7 +9,7 @@ const tags = [...new Set(allPosts.flatMap((post) => post.data.tags))].sort();
 const pageTitle = "Теги";
 ---
 
-<BaseLayout pageTitle={pageTitle}>
+<BaseLayout pageTitle={pageTitle} description="Все темы блога в одном месте.">
   <header class="mb-10">
     <h1>{pageTitle}</h1>
     <p class="text-text mt-3">Все темы блога в одном месте.</p>
