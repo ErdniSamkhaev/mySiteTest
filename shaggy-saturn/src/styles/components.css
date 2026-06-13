@@ -193,6 +193,27 @@
   );
 }
 
+/* кнопка лайка поста */
+.like-button {
+  @apply inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm font-medium text-text transition duration-200;
+}
+.like-button:hover:not(:disabled) {
+  @apply border-primary text-primary;
+}
+.like-button:disabled {
+  @apply cursor-default opacity-70;
+}
+.like-button .like-heart {
+  @apply transition-transform duration-200;
+}
+.like-button.is-liked {
+  @apply border-primary text-primary;
+}
+.like-button.is-liked .like-heart {
+  fill: currentColor;
+  @apply scale-110;
+}
+
 /* карточка подписки на главной */
 .subscribe-card:hover,
 .subscribe-card:focus-visible {

@@ -1,0 +1,111 @@
+---
+/**
+ * Лайк поста. Работает на статическом сайте: клиент вызывает RPC Supabase
+ * (anon-ключ + RLS). Идентификация анонимная — случайный visitor_id в localStorage.
+ * Если Supabase не настроен (нет PUBLIC_-переменных), кнопка прячется.
+ */
+interface Props {
+  slug: string;
+}
+const { slug } = Astro.props;
+---
+
+<div class="mt-12 flex justify-center">
+  <button
+    type="button"
+    class="like-button"
+    data-slug={slug}
+    aria-pressed="false"
+    aria-label="Нравится"
+    disabled
+    hidden
+  >
+    <svg
+      class="like-heart"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path
+        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"
+      ></path>
+    </svg>
+    <span class="like-count tabular-nums">0</span>
+  </button>
+</div>
+
+<script>
+  import { supabase } from "../scripts/supabase";
+
+  function getVisitorId(): string {
+    const KEY = "visitor_id";
+    let id = "";
+    try {
+      id = localStorage.getItem(KEY) ?? "";
+    } catch {
+      /* localStorage недоступен */
+    }
+    if (!id) {
+      id =
+        typeof crypto !== "undefined" && crypto.randomUUID
+          ? crypto.randomUUID()
+          : String(Date.now()) + Math.random().toString(16).slice(2);
+      try {
+        localStorage.setItem(KEY, id);
+      } catch {
+        /* приватный режим — id живёт до перезагрузки */
+      }
+    }
+    return id;
+  }
+
+  async function setupLikes() {
+    const buttons =
+      document.querySelectorAll<HTMLButtonElement>(".like-button");
+    if (!buttons.length || !supabase) return; // не настроено — кнопка остаётся hidden
+
+    const visitor = getVisitorId();
+
+    for (const btn of buttons) {
+      if (btn.dataset.likeReady) continue; // защита от двойной инициализации (ClientRouter)
+      btn.dataset.likeReady = "1";
+
+      const slug = btn.dataset.slug!;
+      const countEl = btn.querySelector<HTMLElement>(".like-count")!;
+
+      const render = (likes: number, liked: boolean) => {
+        countEl.textContent = String(likes);
+        btn.setAttribute("aria-pressed", String(liked));
+        btn.classList.toggle("is-liked", liked);
+        btn.hidden = false;
+        btn.disabled = false;
+      };
+
+      const { data, error } = await supabase.rpc("get_post_likes", {
+        p_slug: slug,
+        p_visitor: visitor,
+      });
+      if (!error && data) render(data.likes ?? 0, data.liked ?? false);
+
+      btn.addEventListener("click", async () => {
+        if (btn.disabled) return;
+        btn.disabled = true;
+        const { data, error } = await supabase!.rpc("toggle_post_like", {
+          p_slug: slug,
+          p_visitor: visitor,
+        });
+        if (!error && data) render(data.likes ?? 0, data.liked ?? false);
+        else btn.disabled = false; // ошибка — вернуть кликабельность
+      });
+    }
+  }
+
+  document.addEventListener("astro:page-load", setupLikes);
+  setupLikes();
+</script>

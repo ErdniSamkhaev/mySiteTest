@@ -91,6 +91,18 @@ Unbounded (заголовки, `--font-secondary`) + Onest (текст, `--font-
 - Абсолютные URL берутся из `Astro.site` (`https://just-erdni.com` в `astro.config.mjs`).
 - Страница 404 — `src/pages/404.astro`.
 
+## Лайки постов (Supabase)
+
+Статический сайт → лайки идут из браузера в Supabase (`anon`-ключ + RLS), без своего бэкенда.
+
+- Компонент: `src/components/LikeButton.astro` (подключён в `MarkdownPostLayout`, slug = `post.id`).
+- Клиент: `src/scripts/supabase.ts` — `null`, если переменные не заданы (кнопка тогда прячется).
+- БД: применить `supabase/migrations/0001_post_likes.sql` (таблица + RLS + RPC `get_post_likes` / `toggle_post_like`).
+- Идентификация анонимная: случайный `visitor_id` в localStorage; повторный лайк с того же браузера снимается (toggle).
+- Переменные (`.env` локально + в Netlify): `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY` (см. `.env.example`).
+
+Доступ к таблице закрыт RLS — работа только через `security definer` функции, поэтому `visitor_id` наружу не отдаётся и чужие лайки удалить нельзя.
+
 ## Известный техдолг
 
 - Прогресс-бар чтения на странице поста — запланирован, вне макета «Эволюция 3D».

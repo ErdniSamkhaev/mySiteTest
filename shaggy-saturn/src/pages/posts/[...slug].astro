@@ -21,6 +21,6 @@ interface Props {
 const { post } = Astro.props as Props;
 const { Content } = await render(post);
 ---
-<MarkdownPostLayout frontmatter={post.data}>
+<MarkdownPostLayout frontmatter={post.data} slug={post.id}>
   <Content />
 </MarkdownPostLayout>

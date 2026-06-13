@@ -1,8 +1,9 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
+import LikeButton from "../components/LikeButton.astro";
 import { slugifyTag } from "../scripts/slugify";
 
-const { frontmatter } = Astro.props;
+const { frontmatter, slug } = Astro.props;
 
 const formattedDate = frontmatter.pubDate
   ? new Date(frontmatter.pubDate).toLocaleDateString("ru-RU", {
@@ -88,5 +89,7 @@ const imageClasses =
     <article class="content">
       <slot />
     </article>
+
+    {slug && <LikeButton slug={slug} />}
   </div>
 </BaseLayout>
