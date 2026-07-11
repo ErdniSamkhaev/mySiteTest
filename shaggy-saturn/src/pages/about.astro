@@ -3,51 +3,122 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 const pageTitle = "Обо мне";
 
-const identity = {
-  firstName: "Эрдни",
-  country: "России",
-  city: "Москве",
-  occupation: "Фронтенд-разработчиком",
-  hobbies: ["анжумания", "поутрам бегат", "кушац лублу"],
-  bio: "Веду блог и делюсь заметками.",
-  github: "https://github.com/ErdniSamkhaev?tab=repositories",
-};
+const highlights = [
+  {
+    value: "44 000",
+    label: "пользователей у Chrome-расширения, которое я разрабатывал и поддерживал",
+  },
+  {
+    value: "2 ч → 15 мин",
+    label: "сократил время деплоя, настроив GitLab CI/CD",
+  },
+];
 
-const skills = ["HTML", "CSS", "JavaScript", "Vue.js", "Astro", "Node.js"];
+const skillGroups = [
+  {
+    title: "Frontend",
+    items: ["Vue 3", "TypeScript", "JavaScript", "Pinia", "Tailwind", "Astro", "HTML", "CSS"],
+  },
+  {
+    title: "Backend",
+    items: ["Node.js", "Express", "REST API", "PostgreSQL", "SQL", "WebSocket"],
+  },
+  {
+    title: "Инструменты",
+    items: ["Git", "GitLab CI/CD", "Docker", "Linux", "Vite", "Figma", "Jira", "Chrome Extensions (MV3)"],
+  },
+];
+
+const languages = [
+  { name: "Русский", level: "родной" },
+  { name: "Английский", level: "B1" },
+];
 ---
 
 <BaseLayout
   pageTitle={pageTitle}
-  description="Эрдни Самхаев — фронтенд-разработчик из Москвы. Веду блог и делюсь заметками."
+  description="Эрдни Самхаев — фронтенд-разработчик (Vue 3, TypeScript) из Москвы. Раньше — фельдшер неотложной помощи. Пишу блог про разработку и обучение."
 >
-  <article class="content mx-auto max-w-3xl">
+  <div class="mx-auto max-w-3xl">
     <div class="flex flex-col items-center gap-8 sm:flex-row sm:items-start">
       <img
         src="/images/me2.webp"
         width={192}
         height={192}
-        alt={`Фото ${identity.firstName}`}
-        class="size-48 shrink-0 rounded-full object-cover"
+        alt="Фото Эрдни"
+        class="size-40 shrink-0 rounded-full object-cover sm:size-48"
+        style="object-position: 50% 20%;"
       />
 
       <section aria-labelledby="about-heading" class="min-w-0 text-center sm:text-left">
         <h1 id="about-heading">{pageTitle}</h1>
-        <p>Меня зовут {identity.firstName}.</p>
-        <p>Живу в {identity.city}, работаю {identity.occupation}.</p>
-        <p>Хобби: {identity.hobbies.join(", ")}.</p>
-        <p>{identity.bio}</p>
+        <p class="text-primary mt-2 font-medium">
+          Frontend Developer · Vue 3 / TypeScript
+        </p>
+
+        <div class="text-text mt-5 space-y-4 leading-relaxed">
+          <p>
+            Меня зовут Эрдни. Я фронтенд-разработчик — Vue 3 и TypeScript — с
+            fullstack-практикой: примерно 70% фронтенд и 30% бэкенд на Node.js и
+            Express.
+          </p>
+          <p>
+            В разработку пришёл не сразу. Несколько лет работал фельдшером
+            неотложной помощи — это приучило собранно действовать там, где мало
+            времени и высокая цена ошибки. Потом ушёл в код: проектирую
+            клиентские приложения, настраиваю CI/CD и веду продукты от постановки
+            задачи до релиза.
+          </p>
+          <p>
+            Здесь, в блоге, делюсь заметками о разработке и обучении — учусь
+            публично и фиксирую путь.
+          </p>
+        </div>
       </section>
     </div>
 
-    <section aria-labelledby="skills-heading" class="mt-10">
+    <section aria-label="Ключевое" class="mt-12 grid gap-4 sm:grid-cols-2">
+      {
+        highlights.map((h) => (
+          <div class="rounded-xl border border-border bg-surface p-5">
+            <p class="font-secondary text-2xl font-semibold text-primary">
+              {h.value}
+            </p>
+            <p class="text-text mt-1 text-sm leading-snug">{h.label}</p>
+          </div>
+        ))
+      }
+    </section>
+
+    <section aria-labelledby="skills-heading" class="mt-12">
       <h2 id="skills-heading">Навыки</h2>
-      <div class="not-prose">
-        <ul class="tags mt-4" role="list">
-          {skills.map((skill) => (
-            <li class="tag">{skill}</li>
-          ))}
-        </ul>
+      <div class="mt-5 space-y-5">
+        {
+          skillGroups.map((group) => (
+            <div>
+              <p class="text-meta text-sm font-medium">{group.title}</p>
+              <ul class="tags mt-2" role="list">
+                {group.items.map((skill) => (
+                  <li class="tag">{skill}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
       </div>
     </section>
-  </article>
+
+    <section aria-labelledby="lang-heading" class="mt-12">
+      <h2 id="lang-heading">Языки</h2>
+      <ul class="text-text mt-4 space-y-1" role="list">
+        {
+          languages.map((lang) => (
+            <li>
+              <span class="text-text-dark">{lang.name}</span> — {lang.level}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
 </BaseLayout>
