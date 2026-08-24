@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://just-erdni.netlify.app/sitemap.xml

@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import { supabase } from "../../lib/supabase";
 
 const TELEGRAM = "https://t.me/just_erdni";
 const GITHUB = "https://github.com/ErdniSamkhaev";
@@ -32,24 +31,27 @@ export default function Contact() {
       return;
     }
 
-    if (!supabase) {
-      setNote(`Форма не настроена — напишите в Telegram: ${TELEGRAM}`);
-      return;
-    }
-
     setSending(true);
     setNote("Отправляю…");
-    const { error } = await supabase
-      .from("messages")
-      .insert({ name, contact, message });
-    setSending(false);
-
-    if (error) {
-      setNote("Не получилось отправить. Попробуйте ещё раз или напишите в Telegram.");
-      return;
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name,
+          contact,
+          message,
+          website: data.get("website") ?? "",
+        }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      setNote("✓ Спасибо! Сообщение отправлено — отвечу вам скоро.");
+      form.reset();
+    } catch {
+      setNote("Не получилось отправить. Напишите, пожалуйста, напрямую в Telegram.");
+    } finally {
+      setSending(false);
     }
-    setNote("✓ Спасибо! Сообщение отправлено — отвечу вам скоро.");
-    form.reset();
   };
 
   return (
@@ -123,14 +125,15 @@ export default function Contact() {
               <button type="submit" className="btn btn-solid" data-magnet data-cursor="Send" disabled={sending}>
                 {sending ? "Отправляю…" : "Отправить →"}
               </button>
-              <span className="form-note" role="status" aria-live="polite" style={note.startsWith("✓") ? { color: "var(--signal)" } : undefined}>
+              <span
+                className="form-note"
+                role="status"
+                aria-live="polite"
+                style={note.startsWith("✓") ? { color: "var(--signal)" } : undefined}
+              >
                 {note}
               </span>
             </div>
-            {!supabase && (
-              <span className="demo-tag">
-              </span>
-            )}
           </form>
         </div>
       </div>

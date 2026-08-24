@@ -146,14 +146,16 @@ export default function App() {
       <Header />
 
       <div className="shell">
-        <Hero />
-        <Ecg phase={0} />
-        <About />
-        <Ecg phase={0.33} />
-        <Services />
-        <Ecg phase={0.66} />
-        <Bloom />
-        <Contact />
+        <main id="main-content">
+          <Hero />
+          <Ecg phase={0} />
+          <About />
+          <Ecg phase={0.33} />
+          <Services />
+          <Ecg phase={0.66} />
+          <Bloom />
+          <Contact />
+        </main>
         <Footer />
       </div>
     </>

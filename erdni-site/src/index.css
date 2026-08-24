@@ -214,6 +214,7 @@ h1,h2,h3 { font-family: var(--font-display); font-weight: 800; text-transform: u
 .bloom-wrap { position: sticky; top: 0; height: 100svh; width: 100%; overflow: hidden; }
 .flower-hold { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
 .flower { width: min(82vmin, 600px); height: min(82vmin, 600px); }
+.flower-video { width: min(90vmin, 760px); max-height: 86svh; height: auto; object-fit: contain; }
 .flower .petal { transform-box: fill-box; transform-origin: 50% 100%; will-change: transform, opacity; }
 .bloom-copy {
   position: absolute; left: 50%; bottom: 7vh; transform: translateX(-50%);

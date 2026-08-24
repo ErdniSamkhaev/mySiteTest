@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { clamp } from "../../lib/env";
 
 type Petal = { d: string; rot: number; fill: string; opacity: number; layer: number };
@@ -10,16 +10,21 @@ const LAYERS = [
 ];
 
 /**
- * Цветок раскрывается и закрывается, привязанно к скроллу (в духе saffron).
- * Секция высокая, а сам цветок закреплён по центру (sticky) на весь проход,
- * поэтому раскрытие хорошо видно: прокрутка вниз — раскрывается, вверх —
- * складывается обратно. Прогресс = сколько прокручено внутри закреплённой секции.
+ * Секция «раскрытие», привязанная к скроллу (как saffron). Цветок закреплён
+ * по центру (sticky) на весь проход, прогресс = сколько прокручено внутри
+ * секции — вниз раскрывается, вверх складывается.
+ *
+ * Если в public/ лежит ролик реального цветка (bloom.webm / bloom.mp4), он
+ * проигрывается перемоткой по скроллу (настоящий цветок, как на референсе).
+ * Если ролика нет — показывается векторный цветок как запасной вариант.
  */
 export default function Bloom() {
   const secRef = useRef<HTMLElement | null>(null);
   const pathRefs = useRef<Array<SVGPathElement | null>>([]);
   const svgRef = useRef<SVGSVGElement | null>(null);
   const progRef = useRef<HTMLSpanElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [mode, setMode] = useState<"svg" | "video">("svg");
 
   const petals = useMemo<Petal[]>(() => {
     const out: Petal[] = [];
@@ -37,28 +42,56 @@ export default function Bloom() {
     return out;
   }, []);
 
+  // определяем, есть ли ролик реального цветка
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const onReady = () => {
+      if (v.duration && isFinite(v.duration) && v.duration > 0) setMode("video");
+    };
+    const onError = () => setMode("svg");
+    v.addEventListener("loadedmetadata", onReady);
+    v.addEventListener("error", onError, true);
+    return () => {
+      v.removeEventListener("loadedmetadata", onReady);
+      v.removeEventListener("error", onError, true);
+    };
+  }, []);
+
   useEffect(() => {
     const sec = secRef.current;
     const svg = svgRef.current;
     if (!sec || !svg) return;
     let raf = 0;
     const frame = () => {
-      // прогресс прокрутки внутри закреплённой секции: 0 — только вошли,
-      // 1 — сейчас уедет. Реверсивно: скролл вверх уменьшает p → цветок закрывается.
       const total = sec.offsetHeight - window.innerHeight;
       const p = total > 0 ? clamp(-sec.getBoundingClientRect().top / total, 0, 1) : 0;
 
-      petals.forEach((pt, idx) => {
-        const el = pathRefs.current[idx];
-        if (!el) return;
-        // послойное раскрытие: внешние лепестки первыми
-        const delay = pt.layer * 0.13 + (idx % 4) * 0.015;
-        const local = clamp((p - delay) / (0.7 - delay), 0, 1);
-        const eased = local * local * (3 - 2 * local);
-        el.style.transform = `scaleY(${0.12 + eased * 0.88}) scaleX(${0.45 + eased * 0.55})`;
-        el.style.opacity = String(0.25 + eased * 0.75);
-      });
-      svg.style.transform = `rotate(${p * 22}deg)`;
+      const v = videoRef.current;
+      if (mode === "video" && v && v.duration) {
+        // перемотка ролика по скроллу — с порогом, чтобы не дёргать seek каждый кадр
+        const target = p * (v.duration - 0.05);
+        if (Math.abs(target - v.currentTime) > 0.03) {
+          try {
+            v.currentTime = target;
+          } catch {
+            /* ещё не seekable — пропускаем кадр */
+          }
+        }
+      } else {
+        // векторный цветок
+        petals.forEach((pt, idx) => {
+          const el = pathRefs.current[idx];
+          if (!el) return;
+          const delay = pt.layer * 0.13 + (idx % 4) * 0.015;
+          const local = clamp((p - delay) / (0.7 - delay), 0, 1);
+          const eased = local * local * (3 - 2 * local);
+          el.style.transform = `scaleY(${0.12 + eased * 0.88}) scaleX(${0.45 + eased * 0.55})`;
+          el.style.opacity = String(0.25 + eased * 0.75);
+        });
+        svg.style.transform = `rotate(${p * 22}deg)`;
+      }
+
       if (progRef.current) {
         progRef.current.textContent = String(Math.round(p * 100)).padStart(3, "0");
       }
@@ -66,17 +99,33 @@ export default function Bloom() {
     };
     raf = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(raf);
-  }, [petals]);
+  }, [petals, mode]);
 
   return (
     <section className="bloom-sec" id="bloom" ref={secRef}>
       <div className="bloom-wrap">
         <div className="flower-hold">
+          {/* ролик реального цветка (если есть в public/) */}
+          <video
+            ref={videoRef}
+            className="flower-video"
+            style={{ display: mode === "video" ? "block" : "none" }}
+            muted
+            playsInline
+            preload="auto"
+            aria-hidden="true"
+          >
+            <source src="/bloom.webm" type="video/webm" />
+            <source src="/bloom.mp4" type="video/mp4" />
+          </video>
+
+          {/* запасной векторный цветок */}
           <svg
             className="flower"
             ref={svgRef}
             viewBox="-110 -110 220 220"
             aria-hidden="true"
+            style={{ display: mode === "video" ? "none" : "block" }}
           >
             {petals.map((pt, idx) => (
               <g key={idx} transform={`rotate(${pt.rot})`}>
@@ -96,7 +145,9 @@ export default function Bloom() {
         </div>
 
         <div className="bloom-copy">
-          <span className="eyebrow">/ Принцип · раскрытие <span ref={progRef}>000</span>%</span>
+          <span className="eyebrow">
+            / Принцип · раскрытие <span ref={progRef}>000</span>%
+          </span>
           <p>
             Хороший продукт раскрывается постепенно — как и доверие. Двигаемся
             шаг за шагом: от первого экрана до работающего релиза.

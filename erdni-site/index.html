@@ -2,14 +2,100 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Домен: https://just-erdni.netlify.app — если сменится, обновите его здесь,
+         в public/sitemap.xml и public/robots.txt -->
+    <title>Эрдни Самхаев — фронтенд-разработчик в Москве</title>
     <meta
       name="description"
-      content="Эрдни Самхаев — фронтенд-разработчик. Сайты и лендинги под ключ, веб-приложения на Vue 3 и TypeScript, Chrome-расширения, CI/CD."
+      content="Эрдни Самхаев — фронтенд-разработчик (Vue 3, TypeScript) из Москвы. Делаю сайты и лендинги под ключ, веб-приложения, Chrome-расширения, настраиваю CI/CD."
     />
-    <meta name="theme-color" content="#070b0a" />
-    <title>Эрдни Самхаев — Frontend Developer</title>
+    <meta
+      name="keywords"
+      content="Эрдни Самхаев, фронтенд-разработчик, frontend developer, Vue 3, TypeScript, разработка сайтов, веб-приложения, Chrome-расширения, CI/CD, Москва"
+    />
+    <meta name="author" content="Эрдни Самхаев" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#0a0f14" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="canonical" href="https://just-erdni.netlify.app/" />
+
+    <!-- favicon -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Эрдни Самхаев" />
+    <meta property="og:title" content="Эрдни Самхаев — фронтенд-разработчик в Москве" />
+    <meta
+      property="og:description"
+      content="Сайты и лендинги под ключ, веб-приложения на Vue 3 и TypeScript, Chrome-расширения, CI/CD."
+    />
+    <meta property="og:url" content="https://just-erdni.netlify.app/" />
+    <meta property="og:image" content="https://just-erdni.netlify.app/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="ru_RU" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Эрдни Самхаев — фронтенд-разработчик" />
+    <meta
+      name="twitter:description"
+      content="Сайты, веб-приложения на Vue 3 и TypeScript, Chrome-расширения, CI/CD."
+    />
+    <meta name="twitter:image" content="https://just-erdni.netlify.app/og.png" />
+
+    <!-- Структурированные данные (Schema.org) — читают Яндекс и Google -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://just-erdni.netlify.app/#person",
+            "name": "Эрдни Самхаев",
+            "jobTitle": "Фронтенд-разработчик",
+            "url": "https://just-erdni.netlify.app/",
+            "image": "https://just-erdni.netlify.app/og.png",
+            "description": "Фронтенд-разработчик (Vue 3, TypeScript) из Москвы. Сайты, веб-приложения, Chrome-расширения, CI/CD.",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Москва",
+              "addressCountry": "RU"
+            },
+            "knowsAbout": [
+              "Vue 3",
+              "TypeScript",
+              "JavaScript",
+              "Node.js",
+              "Astro",
+              "Chrome Extensions",
+              "CI/CD",
+              "Docker"
+            ],
+            "sameAs": [
+              "https://t.me/just_erdni",
+              "https://github.com/ErdniSamkhaev"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://just-erdni.netlify.app/#website",
+            "url": "https://just-erdni.netlify.app/",
+            "name": "Эрдни Самхаев",
+            "inLanguage": "ru-RU",
+            "publisher": { "@id": "https://just-erdni.netlify.app/#person" }
+          }
+        ]
+      }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,6 +106,28 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- Контент для поисковиков и пользователей без JS -->
+    <noscript>
+      <div style="max-width: 720px; margin: 0 auto; padding: 40px 20px; color: #e8f0ec; background: #070b0a; font-family: sans-serif;">
+        <h1>Эрдни Самхаев — фронтенд-разработчик</h1>
+        <p>Vue 3, TypeScript. Москва. Проектирую быстрые интерфейсы и веб-приложения — от первого экрана до продакшена.</p>
+        <h2>Услуги</h2>
+        <ul>
+          <li>Сайты и лендинги под ключ (Astro, Tailwind)</li>
+          <li>Веб-приложения (Vue 3, TypeScript, Node.js)</li>
+          <li>Chrome-расширения (Manifest V3)</li>
+          <li>CI/CD и автоматизация (GitLab CI/CD, Docker)</li>
+        </ul>
+        <h2>Контакты</h2>
+        <p>
+          Telegram: <a href="https://t.me/just_erdni" style="color:#5ef2a3">@just_erdni</a> ·
+          GitHub: <a href="https://github.com/ErdniSamkhaev" style="color:#5ef2a3">ErdniSamkhaev</a> ·
+          Email: <a href="mailto:samkhaev93@gmail.com" style="color:#5ef2a3">samkhaev93@gmail.com</a>
+        </p>
+      </div>
+    </noscript>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

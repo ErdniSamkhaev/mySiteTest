@@ -1,12 +1,13 @@
 # Сайт Эрдни Самхаева
 
-Одностраничный сайт-визитка в тёмном кинематографичном стиле: WebGL-объект,
-инерционный скролл, кастомный курсор, летящая бабочка, раскрывающийся цветок,
-ambient-звук и форма обратной связи в Supabase.
+Одностраничный сайт-визитка в тёмном кинематографичном стиле: интерактивное
+облако частиц, инерционный скролл, кастомный курсор, бабочка и цветок,
+раскрывающиеся по скроллу, ambient-звук и форма обратной связи в Telegram.
 
 **Стек:** React 18 + TypeScript + Vite. Скролл — [Lenis](https://github.com/darkroomengineering/lenis).
-3D-объект — «сырой» WebGL (без тяжёлого 3D-фреймворка). Анимации — CSS +
-IntersectionObserver + requestAnimationFrame. Звук — Web Audio (синтез в браузере).
+Графика — «сырой» WebGL (частицы) и Canvas/SVG. Звук — Web Audio (синтез в
+браузере). Форма — Netlify-функция → Telegram. Для индексации — пререндер
+контента в HTML на этапе сборки.
 
 ## Запуск
 
@@ -19,82 +20,89 @@ npm run dev
 
 Откроется на http://localhost:5173
 
-Прод-сборка:
+Прод-сборка (с пререндером):
 
 ```bash
 npm run build
 npm run preview
 ```
 
-## Форма обратной связи (Supabase)
+## Форма обратной связи → Telegram
 
-Форма пишет сообщения в таблицу `messages`. Без переменных окружения сайт
-работает, но форма показывает подсказку вместо отправки.
+Сообщения формы уходят вам в Telegram через Netlify-функцию
+`netlify/functions/contact.mjs` (адрес `/api/contact`). Токен бота хранится в
+переменных окружения на сервере и в браузер не попадает.
 
-1. Скопируйте `.env.example` в `.env` и подставьте значения из вашего проекта
-   Supabase (Project Settings → API):
+Настройка:
 
+1. Создайте бота у [@BotFather](https://t.me/BotFather) → получите **токен**.
+2. Напишите своему боту любое сообщение, затем откройте
+   `https://api.telegram.org/bot<ТОКЕН>/getUpdates` и найдите ваш **chat_id**
+   (`message.chat.id`).
+3. В Netlify: **Site settings → Environment variables** добавьте:
    ```
-   VITE_SUPABASE_URL=https://ваш-проект.supabase.co
-   VITE_SUPABASE_ANON_KEY=ваш-anon-ключ
+   TELEGRAM_BOT_TOKEN = <токен от BotFather>
+   TELEGRAM_CHAT_ID   = <ваш chat_id>
    ```
+4. Задеплойте — форма заработает.
 
-2. В SQL-редакторе Supabase выполните:
+Локальная проверка формы (функции эмулирует Netlify CLI):
 
-   ```sql
-   create table public.messages (
-     id uuid primary key default gen_random_uuid(),
-     created_at timestamptz not null default now(),
-     name text not null check (char_length(name) between 1 and 100),
-     contact text not null check (char_length(contact) between 1 and 200),
-     message text not null check (char_length(message) between 1 and 3000)
-   );
+```bash
+npm i -g netlify-cli
+netlify dev
+```
 
-   alter table public.messages enable row level security;
+(те же переменные можно положить в `.env` — Netlify CLI их подхватит).
+Анти-спам: скрытое honeypot-поле + отсечка отправки быстрее 3 секунд + повторная
+проверка на сервере.
 
-   -- аноним может только вставлять; читать сообщения — из панели Supabase
-   create policy "anon can insert" on public.messages
-     for insert to anon with check (true);
-   ```
+## SEO / индексация
 
-Сообщения смотрите в Supabase → Table Editor → `messages`.
-anon-ключ публичный — данные защищает RLS: чтение анониму не выдаётся.
-
-Анти-спам: скрытое honeypot-поле + отсечка отправки быстрее 3 секунд.
+- `index.html` содержит `<title>`, `<meta description>`, Open Graph, Twitter
+  Card, `og.png`, и **структурированные данные Schema.org** (Person + WebSite) —
+  их читают Яндекс и Google.
+- `public/robots.txt` и `public/sitemap.xml` — открыты для индексации.
+- **Пререндер:** `npm run build` дополнительно рендерит контент секций в
+  статический HTML и вшивает его в `dist/index.html` (см. `src/prerender.tsx` и
+  `scripts/prerender.mjs`). Поэтому поисковики видят весь текст сразу, без JS.
+  При загрузке JS React заменяет снимок полной интерактивной версией.
+- **Домен** прописан как `https://just-erdni.netlify.app` в `index.html`,
+  `public/sitemap.xml`, `public/robots.txt` — при смене домена обновите его там.
+- После деплоя добавьте сайт в **Яндекс.Вебмастер** и **Google Search Console**,
+  отправьте `sitemap.xml`.
 
 ## Замена фото
 
-Портрет в блоке «Обо мне» — файл `public/images/me2.webp`, который прогоняется
-через дизеринг «под зелёный монитор». Замените файл на свой (тем же именем) или
-поправьте путь в `src/components/Portrait.tsx`. Обработку (сила дизеринга, число
-уровней, цвета) можно настроить там же.
+Портрет в блоке «Обо мне» — файл `public/images/me2.webp`, прогоняется через
+дизеринг «под зелёный монитор». Замените файл на свой (тем же именем) или
+поправьте путь в `src/components/Portrait.tsx`.
 
-## Что где лежит
+## «Настоящий» цветок (опционально)
+
+Секция «Принцип» показывает векторный цветок, раскрывающийся по скроллу. Если
+положить ролик реального цветка в `public/bloom.mp4` (и/или `public/bloom.webm`),
+сайт автоматически переключится на него и будет перематывать по скроллу.
+
+## Структура
 
 ```
 src/
-  App.tsx              — оркестрация: скролл, reveal, активная глава, магнит
-  lib/
-    scroll.ts          — Lenis + общее состояние скролла (scrollState)
-    supabase.ts        — клиент Supabase (null без env)
-    env.ts             — хелперы (reduce-motion, pointer, lerp/clamp)
+  App.tsx              — оркестрация: скролл, reveal, активная глава, магнит, scrim
+  prerender.tsx        — SSR-снимок контента для поисковиков
+  lib/                 — scroll (Lenis), env-хелперы, useAnimationFrame
   components/
-    SceneCanvas.tsx    — WebGL рэймарч-объект
-    Grain.tsx          — плёночное зерно
-    Cursor.tsx         — кастомный курсор
-    Butterfly.tsx      — бабочка по скроллу
-    Ecg.tsx            — ЭКГ-разделитель
-    Hud.tsx            — мониторный HUD
-    SoundToggle.tsx    — ambient-звук + кнопка
-    Portrait.tsx       — портрет с дизерингом
+    SceneCanvas.tsx    — облако частиц (WebGL), реагирует на курсор
+    Grain / Cursor / Butterfly / Ecg / Hud / SoundToggle / Portrait
     Header / Footer / ChaptersNav
-    sections/          — Hero, About, Services, Bloom (цветок), Contact
+    sections/          — Hero, About, Services, Bloom (цветок), Contact (форма)
+netlify/functions/
+  contact.mjs          — приём формы → отправка в Telegram
+scripts/prerender.mjs  — вшивание пререндера в dist/index.html
 ```
 
 ## Доступность
 
-Уважается `prefers-reduced-motion`: у кого включено «уменьшение движения» —
-инерционный скролл, зерно, бабочка и анимация звука отключаются, контент виден
-сразу. Курсор, магнит и звук — только на десктопе с мышью.
-
-test
+Уважается `prefers-reduced-motion`: инерционный скролл, зерно, частицы-анимация,
+бабочка и анимация звука приглушаются/отключаются, контент виден сразу. Курсор,
+магнит и звук — только на десктопе с мышью.

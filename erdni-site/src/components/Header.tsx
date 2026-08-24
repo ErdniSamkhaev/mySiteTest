@@ -20,7 +20,7 @@ export default function Header() {
       <a href="#hero" className="brand">
         <span className="pip" aria-hidden="true" /> Э. Самхаев
       </a>
-      <nav className="top">
+      <nav className="top" aria-label="Основная навигация">
         <a href="#about">
           <span className="num">01</span>
           <span className="label">Обо мне</span>
