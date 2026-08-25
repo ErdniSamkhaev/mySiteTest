@@ -1,15 +1,31 @@
 import Portrait from "../Portrait";
 
 const readouts = [
-  { k: "Пользователей", v: "44 000", sub: "у Chrome-расширения, которое я вёл и поддерживал" },
-  { k: "Деплой", v: "2ч→15м", sub: "сократил время релиза, настроив CI/CD" },
+  { k: "Пользователей", v: "40 000", sub: "у Chrome-расширения, которое я вёл и поддерживал" },
+  { k: "Деплой", v: "1ч→30м", sub: "сократил время релиза, настроив CI/CD" },
   { k: "Front / Back", v: "70/30", sub: "баланс между интерфейсом и сервером" },
   { k: "Языки", v: "RU·EN", sub: "русский — родной, английский — B1" },
 ];
 
-const stack = [
-  "Vue 3", "TypeScript", "Node.js", "Express", "PostgreSQL",
-  "Astro", "Tailwind", "Docker", "GitLab CI/CD", "Chrome MV3",
+const skillGroups = [
+  {
+    title: "Frontend",
+    items: [
+      "React", "Vue 3", "TypeScript", "JavaScript", "Pinia",
+      "Vue Router", "Composition API", "Tailwind", "Vite", "HTML", "CSS",
+    ],
+  },
+  {
+    title: "Backend",
+    items: ["Node.js", "Express", "Go", "REST API", "WebSocket", "PostgreSQL", "SQL"],
+  },
+  {
+    title: "Инструменты",
+    items: [
+      "Docker", "GitLab CI/CD", "GitHub Actions", "Git", "Linux",
+      "Vitest", "Chrome MV3"
+    ],
+  },
 ];
 
 export default function About() {
@@ -33,7 +49,7 @@ export default function About() {
         <div>
           <div className="about-copy">
             <p data-fade="1">
-              Меня зовут Эрдни. Я фронтенд-разработчик на{" "}
+              Меня зовут Эрдни. Я разработчик на{" "}
               <span className="accent">Vue 3</span> и{" "}
               <span className="accent">TypeScript</span> с fullstack-практикой:
               примерно 70% фронтенд и 30% бэкенд на Node.js и Express.
@@ -58,11 +74,18 @@ export default function About() {
 
           <div className="stack-row" data-fade="3">
             <div className="k">Стек</div>
-            <ul className="chips">
-              {stack.map((s) => (
-                <li key={s}>{s}</li>
+            <div className="skill-groups">
+              {skillGroups.map((g) => (
+                <div className="skill-group" key={g.title}>
+                  <div className="skill-group-title">{g.title}</div>
+                  <ul className="chips">
+                    {g.items.map((s) => (
+                      <li key={s}>{s}</li>
+                    ))}
+                  </ul>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </div>
       </div>

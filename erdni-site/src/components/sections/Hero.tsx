@@ -3,7 +3,7 @@ export default function Hero() {
     <section className="hero" id="hero">
       <div className="hero-inner reveal-on">
         <span className="eyebrow" data-fade>
-          Frontend-разработчик · Москва
+          Разработчик · Москва
         </span>
         <h1 className="lines">
           <span className="ln">
