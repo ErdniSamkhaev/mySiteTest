@@ -3,11 +3,12 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "main": "index.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build && vite build --ssr src/prerender.tsx --outDir dist-ssr && node scripts/prerender.mjs",
     "preview": "vite preview",
-    "start": "node server.mjs"
+    "start": "node index.js"
   },
   "dependencies": {
     "express": "^4.21.2",
