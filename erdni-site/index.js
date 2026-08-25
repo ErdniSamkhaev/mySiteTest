@@ -1,30 +1,39 @@
-// Продакшн-сервер для Timeweb Cloud App Platform (и любого Node-хостинга):
-// отдаёт статику из dist/ И принимает форму обратной связи → Telegram.
-// Заменяет собой хостинг статики + серверную функцию в одном процессе.
+// Продакшн-сервер для Timeweb Cloud App Platform:
+// отдаёт статику из dist/ И принимает форму обратной связи → e-mail (SMTP).
 //
-// Точка входа называется index.js специально — многие Node-хостинги (в т.ч.
-// Timeweb) по умолчанию запускают именно index.js.
+// Почему почта, а не Telegram: из российского дата-центра доступ к
+// api.telegram.org режется ТСПУ (запрос виснет по таймауту). SMTP российских
+// провайдеров (Яндекс, Timeweb) доступен из РФ-хостинга.
 //
-// Переменные окружения (задать в панели Timeweb → App Platform → Переменные):
-//   TELEGRAM_BOT_TOKEN — токен бота от @BotFather
-//   TELEGRAM_CHAT_ID   — ваш chat_id
-//   PORT               — порт (Timeweb подставляет автоматически)
+// Переменные окружения (Timeweb → App Platform → Переменные):
+//   SMTP_HOST  — хост SMTP (напр. smtp.yandex.ru или smtp.timeweb.ru)
+//   SMTP_PORT  — порт (465 = SSL, рекомендуется)
+//   SMTP_USER  — логин (полный адрес ящика, от которого шлём)
+//   SMTP_PASS  — пароль ящика (для Яндекса — «пароль приложения»)
+//   MAIL_TO    — куда слать заявки (по умолчанию = SMTP_USER)
+//   MAIL_FROM  — от кого (по умолчанию = SMTP_USER)
+//   PORT       — порт сервера (Timeweb подставляет сам)
 import express from "express";
+import nodemailer from "nodemailer";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { setDefaultResultOrder } from "node:dns";
-
-// В некоторых контейнерах IPv6 анонсируется, но не маршрутизируется — из-за
-// этого исходящие запросы (к api.telegram.org) виснут/падают. Форсируем IPv4.
-try {
-  setDefaultResultOrder("ipv4first");
-} catch {
-  /* старые версии Node — не критично */
-}
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const dist = join(__dirname, "dist");
 const PORT = process.env.PORT || 3000;
+
+// SMTP-транспорт создаём один раз при старте, если заданы переменные
+const smtpReady =
+  process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS;
+const port = Number(process.env.SMTP_PORT) || 465;
+const transporter = smtpReady
+  ? nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port,
+      secure: port === 465, // 465 = SSL, 587 = STARTTLS
+      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+    })
+  : null;
 
 const app = express();
 
@@ -39,7 +48,7 @@ app.use((req, res, next) => {
 
 app.use(express.json({ limit: "16kb" }));
 
-// Форма → Telegram
+// Форма → e-mail
 app.post("/api/contact", async (req, res) => {
   const clean = (v, max) => String(v ?? "").trim().slice(0, max);
   const name = clean(req.body?.name, 100);
@@ -51,42 +60,26 @@ app.post("/api/contact", async (req, res) => {
   if (!name || !contact || !message) {
     return res.status(400).json({ error: "все поля обязательны" });
   }
-
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chatId) {
-    return res.status(500).json({ error: "форма не настроена на сервере" });
+  if (!transporter) {
+    return res.status(500).json({ error: "почта не настроена на сервере" });
   }
 
-  const text =
-    `📨 Новое сообщение с сайта\n\n` +
-    `👤 Имя: ${name}\n` +
-    `✉️ Контакт: ${contact}\n\n` +
-    `💬 ${message}`;
-
   try {
-    const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ chat_id: chatId, text, disable_web_page_preview: true }),
-      signal: AbortSignal.timeout(10000),
+    await transporter.sendMail({
+      from: process.env.MAIL_FROM || process.env.SMTP_USER,
+      to: process.env.MAIL_TO || process.env.SMTP_USER,
+      // если контакт — email, можно ответить прямо из письма
+      replyTo: contact.includes("@") ? contact : undefined,
+      subject: `Заявка с сайта — ${name}`,
+      text:
+        `Новое сообщение с сайта just-erdni.ru\n\n` +
+        `Имя: ${name}\n` +
+        `Контакт: ${contact}\n\n` +
+        `Сообщение:\n${message}`,
     });
-    if (!r.ok) {
-      const body = await r.text().catch(() => "");
-      console.error("[contact] telegram ответил не-OK:", r.status, body.slice(0, 300));
-      return res.status(502).json({ error: "не удалось отправить в Telegram" });
-    }
   } catch (err) {
-    // подробно логируем, чтобы в «Логах приложения» Timeweb была видна причина
-    console.error(
-      "[contact] запрос к Telegram упал:",
-      err?.name,
-      "|",
-      err?.message,
-      "| cause:",
-      err?.cause?.code || err?.cause?.message || err?.cause || "нет",
-    );
-    return res.status(502).json({ error: "сеть недоступна" });
+    console.error("[contact] отправка письма упала:", err?.message, err?.code || "");
+    return res.status(502).json({ error: "не удалось отправить" });
   }
   res.json({ ok: true });
 });
@@ -96,7 +89,6 @@ app.use(express.static(dist));
 // Одностраничник: всё остальное → index.html (с пререндер-контентом)
 app.get("*", (_req, res) => res.sendFile(join(dist, "index.html")));
 
-// Слушаем на 0.0.0.0, чтобы контейнер был доступен снаружи
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Сервер запущен на 0.0.0.0:${PORT}`);
 });
