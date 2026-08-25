@@ -57,6 +57,37 @@ netlify dev
 Анти-спам: скрытое honeypot-поле + отсечка отправки быстрее 3 секунд + повторная
 проверка на сервере.
 
+## Деплой на Timeweb Cloud (App Platform)
+
+Проект собран так, что один Node-сервер (`server.mjs`) и отдаёт статику сайта, и
+принимает форму → Telegram. Поэтому в РФ сайт открывается без VPN (в отличие от
+Netlify, который блокируют), а форма работает без отдельного бэкенда.
+
+1. Залейте код в Git-репозиторий (GitHub/GitLab).
+2. Timeweb Cloud → **App Platform → Создать** → тип **Backend (Node.js)**,
+   подключите репозиторий.
+3. Настройки приложения:
+   - **Корневая директория:** `erdni-site` (если репозиторий — вся папка
+     `mySiteTest`; если пушите только `erdni-site` — оставьте корень).
+   - **Команда сборки:** `npm install --include=dev && npm run build`
+     (важно `--include=dev`: `vite`/`typescript` — в devDependencies и нужны для сборки).
+   - **Команда запуска:** `npm start`
+   - **Версия Node.js:** 18 или 20.
+   - Порт сервер берёт из `PORT` (Timeweb подставит сам).
+4. **Переменные окружения** (там же, в настройках приложения):
+   ```
+   TELEGRAM_BOT_TOKEN = токен от @BotFather
+   TELEGRAM_CHAT_ID   = ваш chat_id
+   ```
+5. Задеплойте. Получите адрес приложения (поддомен Timeweb) — проверьте, что
+   сайт открывается и форма шлёт в Telegram.
+6. Привяжите свой домен (App Platform → Домены) и **обновите домен** в
+   `index.html`, `public/sitemap.xml`, `public/robots.txt` (сейчас там
+   `just-erdni.netlify.app`).
+
+> Файлы `netlify.toml` и `netlify/functions/` больше не нужны для Timeweb — можно
+> удалить или оставить (они не мешают Node-серверу).
+
 ## SEO / индексация
 
 - `index.html` содержит `<title>`, `<meta description>`, Open Graph, Twitter
