@@ -12,6 +12,15 @@
 import express from "express";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { setDefaultResultOrder } from "node:dns";
+
+// В некоторых контейнерах IPv6 анонсируется, но не маршрутизируется — из-за
+// этого исходящие запросы (к api.telegram.org) виснут/падают. Форсируем IPv4.
+try {
+  setDefaultResultOrder("ipv4first");
+} catch {
+  /* старые версии Node — не критично */
+}
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const dist = join(__dirname, "dist");
@@ -60,9 +69,23 @@ app.post("/api/contact", async (req, res) => {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ chat_id: chatId, text, disable_web_page_preview: true }),
+      signal: AbortSignal.timeout(10000),
     });
-    if (!r.ok) return res.status(502).json({ error: "не удалось отправить в Telegram" });
-  } catch {
+    if (!r.ok) {
+      const body = await r.text().catch(() => "");
+      console.error("[contact] telegram ответил не-OK:", r.status, body.slice(0, 300));
+      return res.status(502).json({ error: "не удалось отправить в Telegram" });
+    }
+  } catch (err) {
+    // подробно логируем, чтобы в «Логах приложения» Timeweb была видна причина
+    console.error(
+      "[contact] запрос к Telegram упал:",
+      err?.name,
+      "|",
+      err?.message,
+      "| cause:",
+      err?.cause?.code || err?.cause?.message || err?.cause || "нет",
+    );
     return res.status(502).json({ error: "сеть недоступна" });
   }
   res.json({ ok: true });
