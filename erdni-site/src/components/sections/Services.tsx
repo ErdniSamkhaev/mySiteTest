@@ -14,7 +14,7 @@ const services = [
   {
     idx: "/03",
     title: "Chrome-расширения",
-    desc: "Расширения на Manifest V3 — от идеи до публикации в Chrome Web Store. Есть опыт поддержки расширения на 44 000 пользователей.",
+    desc: "Расширения на Manifest V3 — от идеи до публикации в Chrome Web Store. Есть опыт поддержки расширения на 40 000 пользователей.",
     tags: ["Manifest V3", "Web Store"],
   },
   {
